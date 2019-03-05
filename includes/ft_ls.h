@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:31:17 by midrissi          #+#    #+#             */
-/*   Updated: 2019/03/01 21:13:29 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/03/05 06:56:22 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,9 @@
 # include <uuid/uuid.h>
 # include <fcntl.h>
 # include <dirent.h>
+# include <time.h>
+
+t_list *g_list;
 
 typedef struct stat		t_stat;
 typedef struct dirent	t_dirent;
@@ -30,9 +33,10 @@ typedef struct group	t_group;
 
 typedef struct			s_file
 {
-  t_stat      stats;
+	t_stat				stats;
+	char				perms[10];
 	char				*name;
 	char				full_path[PATH_MAX];
 }						t_file;
 
-# endif
+#endif
