@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/03/05 06:56:20 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/03/06 04:33:00 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void		list_dir(DIR *dir)
 	{
 		if (size < ft_strlen(d->d_name))
 			size = ft_strlen(d->d_name) + 1;
-		if (*(d->d_name) != '.')
+		if (*(d->d_name) != '.' || (g_flags & F_DOT))
 			ft_printf("%-*s", size, d->d_name);
 	}
 	ft_printf("\n");
@@ -90,46 +90,33 @@ void		print_full_info(t_file file)
 	file.name);
 }
 
-// int        main(int argc, char **argv)
-// {
-//     char arg = get_args(argc, argv);
-//     ft_printf("arg vaut : %d\n", arg);
-//     if (!arg)
-//         ft_printf("Pas dargument/argument invalide\n");
-//     else
-//     {
-//         (arg & F_LIST) && (ft_printf("flags: F_LIST\n"));
-//         (arg & F_RECURSIVE) && (ft_printf("flags: F_RECURSIVE\n"));
-//         (arg & F_DOT) && (ft_printf("flags: F_DOT\n"));
-//         (arg & F_REVERSE) && (ft_printf("flags: F_REVERSE\n"));
-//         (arg & F_SORT_TIME) && (ft_printf("flags: F_SORT TIME\n"));
-//         (arg & F_LAST_ACCESS_TIME) && (ft_printf("flags: F_ACCESS TIME\n"));
-//         (arg & F_SORT_OFF) && (ft_printf("flags: F_SORT OFF\n"));
-//         (arg & F_COLOR) && (ft_printf("flags: F_COLOR\n"));
-//     }
-//     return (0);
-// }
 
-char    get_args(int argc, char **argv)
+void		print_flags(void)
 {
-    int a;
-    char flags;
+	(g_flags & F_LIST) && (ft_printf("g_flags: F_LIST\n"));
+	(g_flags & F_RECURSIVE) && (ft_printf("g_flags: F_RECURSIVE\n"));
+	(g_flags & F_DOT) && (ft_printf("g_flags: F_DOT\n"));
+	(g_flags & F_REVERSE) && (ft_printf("g_flags: F_REVERSE\n"));
+	(g_flags & F_SORT_TIME) && (ft_printf("g_flags: F_SORT TIME\n"));
+	(g_flags & F_LAST_ACCESS_TIME) && (ft_printf("g_flags: F_ACCESS TIME\n"));
+	(g_flags & F_SORT_OFF) && (ft_printf("g_flags: F_SORT OFF\n"));
+	(g_flags & F_COLOR) && (ft_printf("g_flags: F_COLOR\n"));
+}
 
-    flags = 0;
-    a = -1;
-    while (++a < argc)
-    {
-        if (*argv[a] == '-' && (*argv[a]++))
-        {
-            while (*argv[a] != ' ' && *argv[a])
-            {
-                if (~ft_indexof(FLAGS, *argv[a]))
-                    flags |= (1 << (ft_indexof(FLAGS, *argv[a]) - 1));
-                (void)*argv[a]++;
-            }
-        }
-    }
-    return (flags);
+void		set_lsflags(int argc, char **argv)
+{
+	int a;
+
+	g_flags = 0;
+	a = -1;
+	while (++a < argc)
+		if (*argv[a] == '-' && (*argv[a]++))
+			while (*argv[a] != ' ' && *argv[a])
+			{
+				if (~ft_indexof(LSFLAGS, *argv[a]))
+					g_flags |= (1 << (ft_indexof(LSFLAGS, *argv[a])));
+				(void)*argv[a]++;
+			}
 }
 
 int			main(int argc, char **argv)
@@ -139,9 +126,11 @@ int			main(int argc, char **argv)
 
 	if (argc < 2)
 		return (0);
-	dir = opendir(argv[1]);
+	set_lsflags(argc, argv);
+	print_flags();
+	dir = opendir(argv[2]);
 	list_dir(dir);
-	file = create_file(argv[1]);
+	file = create_file(argv[2]);
 	print_full_info(file);
 	return (0);
 }

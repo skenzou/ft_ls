@@ -6,7 +6,7 @@
 #    By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/10/09 12:43:35 by midrissi          #+#    #+#              #
-#    Updated: 2019/02/27 04:03:58 by midrissi         ###   ########.fr        #
+#    Updated: 2019/03/05 21:59:03 by midrissi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,8 @@ srcs/ft_strrchr.c srcs/ft_tolower.c srcs/get_next_line.c srcs/ft_itoa_base.c \
 srcs/ft_nputchar.c srcs/ft_ftoa.c srcs/ft_utoa_base.c srcs/ft_count_char.c \
 srcs/ft_lstpushback.c srcs/ft_lstrev.c srcs/ft_lstdestroy.c \
 srcs/ft_count_words.c srcs/ft_printf.c srcs/numbers.c srcs/format_geters.c \
-srcs/handlers.c srcs/ft_abs.c srcs/ft_get_color.c srcs/ft_percent.c
+srcs/handlers.c srcs/ft_abs.c srcs/ft_get_color.c srcs/ft_percent.c \
+srcs/ft_indexof.c
 
 OBJDIR = ./obj/
 OBJ = $(patsubst srcs/%.c,$(OBJDIR)%.o,$(SRCS))
