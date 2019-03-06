@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:31:17 by midrissi          #+#    #+#             */
-/*   Updated: 2019/03/06 23:39:02 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/03/06 23:51:23 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,20 +33,20 @@
 # define F_SORT_OFF         (1 << 6)
 # define F_COLOR            (1 << 7)
 
-t_list	*g_files;
-extern char	g_flags;
+t_list						*g_files;
+extern char					g_flags;
 
-typedef struct stat		t_stat;
-typedef struct dirent	t_dirent;
-typedef struct passwd	t_passwd;
-typedef struct group	t_group;
+typedef struct stat			t_stat;
+typedef struct dirent		t_dirent;
+typedef struct passwd		t_passwd;
+typedef struct group		t_group;
 
-typedef struct			s_file
+typedef struct				s_file
 {
-	t_stat				stats;
-	char				perms[11];
-	char				*name;
-	char				full_path[PATH_MAX];
-}						t_file;
+	t_stat					stats;
+	char					perms[11];
+	char					*name;
+	char					full_path[PATH_MAX];
+}							t_file;
 
 #endif
