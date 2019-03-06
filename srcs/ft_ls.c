@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/03/06 23:15:27 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/03/06 23:29:46 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,14 +67,14 @@ t_file		create_file(char *name)
 	(S_ISLNK(file.stats.st_mode)) && (file.perms[0] = 'l');
 	(S_ISSOCK(file.stats.st_mode)) && (file.perms[0] = 's');
 	file.perms[0] || (file.perms[0] = '?');
-	file.perms[1] = ((file.stats.st_mode & S_IRUSR) ? 'r' : '-');
-	file.perms[2] = ((file.stats.st_mode & S_IWUSR) ? 'w' : '-');
+	file.perms[1] = ("-r"[(file.stats.st_mode & S_IRUSR) > 0]);
+	file.perms[2] = ("-w"[(file.stats.st_mode & S_IWUSR) > 0]);
 	file.perms[3] = (third_permission(file.stats.st_mode, 'u'));
-	file.perms[4] = ((file.stats.st_mode & S_IRGRP) ? 'r' : '-');
-	file.perms[5] = ((file.stats.st_mode & S_IWGRP) ? 'w' : '-');
+	file.perms[4] = ("-r"[(file.stats.st_mode & S_IRGRP) > 0]);
+	file.perms[5] = ("-w"[(file.stats.st_mode & S_IWGRP) > 0]);
 	file.perms[6] = (third_permission(file.stats.st_mode, 'g'));
-	file.perms[7] = ((file.stats.st_mode & S_IROTH) ? 'r' : '-');
-	file.perms[8] = ((file.stats.st_mode & S_IWOTH) ? 'w' : '-');
+	file.perms[7] = ("-r"[(file.stats.st_mode & S_IROTH) > 0]);
+	file.perms[8] = ("-w"[(file.stats.st_mode & S_IWOTH) > 0]);
 	file.perms[9] = (third_permission(file.stats.st_mode, 'o'));
 	file.perms[10] = get_extended(file);
 	return (file);
@@ -83,13 +83,13 @@ t_file		create_file(char *name)
 void		print_full_info(t_file file)
 {
 	ft_printf("%s %ld %s %s %lld %.12s %s\n",
-	file.perms,
-	file.stats.st_nlink,
-	getpwuid(file.stats.st_uid)->pw_name,
-	getgrgid(file.stats.st_gid)->gr_name,
-	file.stats.st_size,
-	ctime(&file.stats.st_mtimespec.tv_sec) + 4,
-	file.name);
+		file.perms,
+		file.stats.st_nlink,
+		getpwuid(file.stats.st_uid)->pw_name,
+		getgrgid(file.stats.st_gid)->gr_name,
+		file.stats.st_size,
+		ctime(&file.stats.st_mtimespec.tv_sec) + 4,
+		file.name);
 }
 
 void		print_flags(void)
