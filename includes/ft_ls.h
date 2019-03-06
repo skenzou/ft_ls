@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:31:17 by midrissi          #+#    #+#             */
-/*   Updated: 2019/03/06 23:29:46 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/03/06 23:30:25 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,15 @@
 # include <fcntl.h>
 # include <dirent.h>
 # include <time.h>
-# define LSFLAGS "lRaftugb"
-# define F_LIST (1 << 0)
-# define F_RECURSIVE (1 << 1)
-# define F_DOT (1 << 2)
-# define F_REVERSE (1 << 3)
-# define F_SORT_TIME (1 << 4)
+# define LSFLAGS            "lRaftugb"
+# define F_LIST             (1 << 0)
+# define F_RECURSIVE        (1 << 1)
+# define F_DOT              (1 << 2)
+# define F_REVERSE          (1 << 3)
+# define F_SORT_TIME        (1 << 4)
 # define F_LAST_ACCESS_TIME (1 << 5)
-# define F_SORT_OFF (1 << 6)
-# define F_COLOR (1 << 7)
+# define F_SORT_OFF         (1 << 6)
+# define F_COLOR            (1 << 7)
 
 t_list	*g_files;
 extern char	g_flags;
