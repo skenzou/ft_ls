@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/13 11:36:13 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/03/02 22:57:32 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/03/07 00:57:46 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,8 @@ void			ft_lstdel(t_list **alst, void (*del)(void *, size_t));
 void			ft_lstiter(t_list *lst, void (*f)(t_list *elem));
 t_list			*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem));
 void			ft_lstadd(t_list **alst, t_list *new);
+int				ft_lstdestroy(t_list **lst);
+void			ft_lstrev(t_list **alst);
 int				get_next_line(int fd, char **line, char separator);
 int				is_even(int number);
 int				abs(int n);
