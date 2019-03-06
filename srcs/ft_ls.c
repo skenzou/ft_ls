@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/03/06 22:06:22 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/03/06 22:52:04 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,28 @@ void		list_dir(DIR *dir)
 // 	file->perms[9] = ((mode & S_IXOTH) ? 'x' : '-');
 // }
 
+
+char get_correct_char(int mode, int is_exec, int is_sticky)
+{
+	return (mode & is_exec ? "xs"[mode & is_sticky] : "-S"[mode & is_sticky]);
+}
+
+
+char third_permission(int mode, int type_user)
+{
+	if (!type_user)
+		return (get_correct_char(mode, S_IXUSR, S_ISUID));
+	else if (type_user == 1)
+		return (get_correct_char(mode, S_IXGRP, S_ISGID));
+	else
+	{
+		if (mode & S_IXOTH)
+			return ("xt"[mode & S_ISTXT]);
+		else
+			return ("-T"[mode & S_ISTXT]);
+	}
+}
+
 t_file		create_file(char *name)
 {
 	t_file		file;
@@ -59,6 +81,8 @@ t_file		create_file(char *name)
 	stat(name, &(file.stats));
 	file.name = name;
 	file.perms[0] = 0;
+
+	/*TYPE OF FILE*/
 	(S_ISREG(file.stats.st_mode)) && (file.perms[0] = '-');
 	(S_ISDIR(file.stats.st_mode)) && (file.perms[0] = 'd');
 	(S_ISBLK(file.stats.st_mode)) && (file.perms[0] = 'b');
@@ -67,15 +91,27 @@ t_file		create_file(char *name)
 	(S_ISLNK(file.stats.st_mode)) && (file.perms[0] = 'l');
 	(S_ISSOCK(file.stats.st_mode)) && (file.perms[0] = 's');
 	file.perms[0] || (file.perms[0] = '?');
+
+	/*USER*/
 	file.perms[1] = ((file.stats.st_mode & S_IRUSR) ? 'r' : '-');
 	file.perms[2] = ((file.stats.st_mode & S_IWUSR) ? 'w' : '-');
-	file.perms[3] = ((file.stats.st_mode & S_IXUSR) ? 'x' : '-');
+	file.perms[3] = (third_permission(file.stats.st_mode, 0));
+	/*file.perms[3] = ((file.stats.st_mode & S_IXUSR) ? 'x',  '-');*/
+
+	/*GROUP*/
 	file.perms[4] = ((file.stats.st_mode & S_IRGRP) ? 'r' : '-');
 	file.perms[5] = ((file.stats.st_mode & S_IWGRP) ? 'w' : '-');
-	file.perms[6] = ((file.stats.st_mode & S_IXGRP) ? 'x' : '-');
+	file.perms[6] = (third_permission(file.stats.st_mode, 1));
+	/*file.perms[6] = ((file.stats.st_mode & S_IXGRP) ? 'x' : '-');*/
+
+	/*OTHERS*/
 	file.perms[7] = ((file.stats.st_mode & S_IROTH) ? 'r' : '-');
 	file.perms[8] = ((file.stats.st_mode & S_IWOTH) ? 'w' : '-');
-	file.perms[9] = ((file.stats.st_mode & S_IXOTH) ? 'x' : '-');
+	file.perms[9] = (third_permission(file.stats.st_mode, 2));
+	/*file.perms[9] = ((file.stats.st_mode & S_IXOTH) ? 'x' : '-');*/
+
+	/*BONUS*/
+	file.perms[10] = '@';
 	return (file);
 }
 
@@ -90,7 +126,6 @@ void		print_full_info(t_file file)
 	ctime(&file.stats.st_mtimespec.tv_sec) + 4,
 	file.name);
 }
-
 
 void		print_flags(void)
 {
@@ -107,7 +142,6 @@ void		print_flags(void)
 void		set_lsflags(int argc, char **argv)
 {
 	int a;
-
 
 	a = -1;
 	while (++a < argc)
