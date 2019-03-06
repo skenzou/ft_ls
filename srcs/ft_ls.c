@@ -6,13 +6,14 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/03/06 22:58:03 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/03/06 23:15:27 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
 char g_flags = 0;
+
 void		list_dir(DIR *dir)
 {
 	t_dirent	*d;
@@ -30,50 +31,27 @@ void		list_dir(DIR *dir)
 	closedir(dir);
 }
 
-// void	perms(t_file *file, int mode)
-// {
-// 	file->perms[0] = 0;
-// 	(S_ISREG(mode)) && (file->perms[0] = '-');
-// 	(S_ISDIR(mode)) && (file->perms[0] = 'd');
-// 	(S_ISBLK(mode)) && (file->perms[0] = 'b');
-// 	(S_ISCHR(mode)) && (file->perms[0] = 'c');
-// 	(S_ISFIFO(mode)) && (file->perms[0] = 'p');
-// 	(S_ISLNK(mode)) && (file->perms[0] = 'l');
-// 	(S_ISSOCK(mode)) && (file->perms[0] = 's');
-// 	file->perms[0] || (file->perms[0] = '?');
-// 	file->perms[1] = ((mode & S_IRUSR) ? 'r' : '-');
-// 	file->perms[2] = ((mode & S_IWUSR) ? 'w' : '-');
-// 	file->perms[3] = ((mode & S_IXUSR) ? 'x' : '-');
-// 	file->perms[4] = ((mode & S_IRGRP) ? 'r' : '-');
-// 	file->perms[5] = ((mode & S_IWGRP) ? 'w' : '-');
-// 	file->perms[6] = ((mode & S_IXGRP) ? 'x' : '-');
-// 	file->perms[7] = ((mode & S_IROTH) ? 'r' : '-');
-// 	file->perms[8] = ((mode & S_IWOTH) ? 'w' : '-');
-// 	file->perms[9] = ((mode & S_IXOTH) ? 'x' : '-');
-// }
-
-
-char get_correct_char(int mode, int is_exec, int is_sticky)
+char		get_correct_char(int mode, int exec, int sticky)
 {
-	return (mode & is_exec ? "xs"[mode & is_sticky] : "-S"[mode & is_sticky]);
+	return (char[2][2]){"-S", "xs"}[(mode & exec) > 0][(mode & sticky) > 0];
 }
 
-
-char third_permission(int mode, char type_user)
+char		third_permission(int m, char type_user)
 {
 	if (type_user == 'u')
-		return (get_correct_char(mode, S_IXUSR, S_ISUID));
+		return (get_correct_char(m, S_IXUSR, S_ISUID));
 	else if (type_user == 'g')
-		return (get_correct_char(mode, S_IXGRP, S_ISGID));
+		return (get_correct_char(m, S_IXGRP, S_ISGID));
 	else
-		return ((char[2][2]){"-T", "xt"}[mode & S_IXOTH][mode & S_ISTXT]);
+		return ((char[2][2]){"-T", "xt"}[(m & S_IXOTH) > 0][(m & S_ISTXT) > 0]);
 }
 
-char get_extended(t_file file)
+char		get_extended(t_file file)
 {
 	(void)file;
 	return ('@');
 }
+
 t_file		create_file(char *name)
 {
 	t_file		file;
@@ -81,8 +59,6 @@ t_file		create_file(char *name)
 	stat(name, &(file.stats));
 	file.name = name;
 	file.perms[0] = 0;
-
-	/*TYPE OF FILE*/
 	(S_ISREG(file.stats.st_mode)) && (file.perms[0] = '-');
 	(S_ISDIR(file.stats.st_mode)) && (file.perms[0] = 'd');
 	(S_ISBLK(file.stats.st_mode)) && (file.perms[0] = 'b');
@@ -91,26 +67,15 @@ t_file		create_file(char *name)
 	(S_ISLNK(file.stats.st_mode)) && (file.perms[0] = 'l');
 	(S_ISSOCK(file.stats.st_mode)) && (file.perms[0] = 's');
 	file.perms[0] || (file.perms[0] = '?');
-
-	/*USER*/
 	file.perms[1] = ((file.stats.st_mode & S_IRUSR) ? 'r' : '-');
 	file.perms[2] = ((file.stats.st_mode & S_IWUSR) ? 'w' : '-');
 	file.perms[3] = (third_permission(file.stats.st_mode, 'u'));
-	/*file.perms[3] = ((file.stats.st_mode & S_IXUSR) ? 'x',  '-');*/
-
-	/*GROUP*/
 	file.perms[4] = ((file.stats.st_mode & S_IRGRP) ? 'r' : '-');
 	file.perms[5] = ((file.stats.st_mode & S_IWGRP) ? 'w' : '-');
 	file.perms[6] = (third_permission(file.stats.st_mode, 'g'));
-	/*file.perms[6] = ((file.stats.st_mode & S_IXGRP) ? 'x' : '-');*/
-
-	/*OTHERS*/
 	file.perms[7] = ((file.stats.st_mode & S_IROTH) ? 'r' : '-');
 	file.perms[8] = ((file.stats.st_mode & S_IWOTH) ? 'w' : '-');
 	file.perms[9] = (third_permission(file.stats.st_mode, 'o'));
-	/*file.perms[9] = ((file.stats.st_mode & S_IXOTH) ? 'x' : '-');*/
-
-	/*BONUS*/
 	file.perms[10] = get_extended(file);
 	return (file);
 }
