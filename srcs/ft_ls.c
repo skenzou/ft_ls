@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/03/06 23:29:46 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/03/06 23:34:29 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void		list_dir(DIR *dir)
 
 char		get_correct_char(int mode, int exec, int sticky)
 {
-	return (char[2][2]){"-S", "xs"}[(mode & exec) > 0][(mode & sticky) > 0];
+	return (char[2][2]){"-S", "xs"}[(mode & exec) NZ][(mode & sticky) NZ];
 }
 
 char		third_permission(int m, char type_user)
@@ -43,7 +43,7 @@ char		third_permission(int m, char type_user)
 	else if (type_user == 'g')
 		return (get_correct_char(m, S_IXGRP, S_ISGID));
 	else
-		return ((char[2][2]){"-T", "xt"}[(m & S_IXOTH) > 0][(m & S_ISTXT) > 0]);
+		return ((char[2][2]){"-T", "xt"}[(m & S_IXOTH) NZ][(m & S_ISTXT) NZ]);
 }
 
 char		get_extended(t_file file)
@@ -67,15 +67,15 @@ t_file		create_file(char *name)
 	(S_ISLNK(file.stats.st_mode)) && (file.perms[0] = 'l');
 	(S_ISSOCK(file.stats.st_mode)) && (file.perms[0] = 's');
 	file.perms[0] || (file.perms[0] = '?');
-	file.perms[1] = ("-r"[(file.stats.st_mode & S_IRUSR) > 0]);
-	file.perms[2] = ("-w"[(file.stats.st_mode & S_IWUSR) > 0]);
-	file.perms[3] = (third_permission(file.stats.st_mode, 'u'));
-	file.perms[4] = ("-r"[(file.stats.st_mode & S_IRGRP) > 0]);
-	file.perms[5] = ("-w"[(file.stats.st_mode & S_IWGRP) > 0]);
-	file.perms[6] = (third_permission(file.stats.st_mode, 'g'));
-	file.perms[7] = ("-r"[(file.stats.st_mode & S_IROTH) > 0]);
-	file.perms[8] = ("-w"[(file.stats.st_mode & S_IWOTH) > 0]);
-	file.perms[9] = (third_permission(file.stats.st_mode, 'o'));
+	file.perms[1] = "-r"[(file.stats.st_mode & S_IRUSR) NZ];
+	file.perms[2] = "-w"[(file.stats.st_mode & S_IWUSR) NZ];
+	file.perms[3] = third_permission(file.stats.st_mode, 'u');
+	file.perms[4] = "-r"[(file.stats.st_mode & S_IRGRP) NZ];
+	file.perms[5] = "-w"[(file.stats.st_mode & S_IWGRP) NZ];
+	file.perms[6] = third_permission(file.stats.st_mode, 'g');
+	file.perms[7] = "-r"[(file.stats.st_mode & S_IROTH) NZ];
+	file.perms[8] = "-w"[(file.stats.st_mode & S_IWOTH) NZ];
+	file.perms[9] = third_permission(file.stats.st_mode, 'o');
 	file.perms[10] = get_extended(file);
 	return (file);
 }

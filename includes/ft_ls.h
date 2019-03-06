@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:31:17 by midrissi          #+#    #+#             */
-/*   Updated: 2019/03/06 23:30:25 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/03/06 23:34:30 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <dirent.h>
 # include <time.h>
 # define LSFLAGS            "lRaftugb"
+# define NZ                 >0
 # define F_LIST             (1 << 0)
 # define F_RECURSIVE        (1 << 1)
 # define F_DOT              (1 << 2)
