@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:31:17 by midrissi          #+#    #+#             */
-/*   Updated: 2019/03/05 22:24:57 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/03/06 22:04:33 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@
 # define F_COLOR (1 << 7)
 
 t_list	*g_files;
-char	g_flags;
+extern char	g_flags;
 
 typedef struct stat		t_stat;
 typedef struct dirent	t_dirent;

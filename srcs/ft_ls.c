@@ -6,12 +6,13 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/03/06 04:33:00 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/03/06 22:06:22 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
+char g_flags = 0;
 void		list_dir(DIR *dir)
 {
 	t_dirent	*d;
@@ -107,14 +108,14 @@ void		set_lsflags(int argc, char **argv)
 {
 	int a;
 
-	g_flags = 0;
+
 	a = -1;
 	while (++a < argc)
 		if (*argv[a] == '-' && (*argv[a]++))
 			while (*argv[a] != ' ' && *argv[a])
 			{
 				if (~ft_indexof(LSFLAGS, *argv[a]))
-					g_flags |= (1 << (ft_indexof(LSFLAGS, *argv[a])));
+					g_flags |= (1 << (ft_indexof(LSFLAGS, *argv[a]) - 1));
 				(void)*argv[a]++;
 			}
 }
