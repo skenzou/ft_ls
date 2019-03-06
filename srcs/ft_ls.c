@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/03/06 23:39:01 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/03/06 23:40:56 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,17 +31,12 @@ void		list_dir(DIR *dir)
 	closedir(dir);
 }
 
-char		get_correct_char(int mode, int exec, int sticky)
-{
-	return (char[2][2]){"-S", "xs"}[(mode & exec) > 0][(mode & sticky) > 0];
-}
-
 char		third_permission(int m, char type_user)
 {
 	if (type_user == 'u')
-		return (get_correct_char(m, S_IXUSR, S_ISUID));
+		return (char[2][2]){"-S", "xs"}[(m & S_IXUSR) > 0][(m & S_ISUID) > 0];
 	else if (type_user == 'g')
-		return (get_correct_char(m, S_IXGRP, S_ISGID));
+		return (char[2][2]){"-S", "xs"}[(m & S_IXGRP) > 0][(m & S_ISGID) > 0];
 	else
 		return ((char[2][2]){"-T", "xt"}[(m & S_IXOTH) > 0][(m & S_ISTXT) > 0]);
 }
