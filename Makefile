@@ -6,7 +6,7 @@
 #    By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/03 09:24:41 by aben-azz          #+#    #+#              #
-#    Updated: 2019/02/15 21:28:54 by aben-azz         ###   ########.fr        #
+#    Updated: 2019/03/07 01:00:14 by aben-azz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -71,7 +71,7 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 		@$(CC) $(C_FLAGS) $(INC) -o $@ -c $<
 		@printf "$(_BOLD)$(_PURPLE)$(MSG)$(_END) $(_CYAN)%-$(LONGEST)s\
 		$(_END)" $(notdir $<)
-		@if test -s src/$*.c; then \
+		@if test -s srcs/$*.c; then \
 		printf "$(_GREEN) [OK]\n$(_END)";\
 		else \
 		printf "$(_RED) [ERROR]\n$(_END)"; fi
