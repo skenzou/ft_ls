@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/03/06 23:51:23 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/03/07 01:17:46 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,15 +62,19 @@ t_file		create_file(char *name)
 	(S_ISLNK(file.stats.st_mode)) && (file.perms[0] = 'l');
 	(S_ISSOCK(file.stats.st_mode)) && (file.perms[0] = 's');
 	file.perms[0] || (file.perms[0] = '?');
+
 	file.perms[1] = "-r"[(file.stats.st_mode & S_IRUSR) > 0];
 	file.perms[2] = "-w"[(file.stats.st_mode & S_IWUSR) > 0];
 	file.perms[3] = third_permission(file.stats.st_mode, 'u');
+
 	file.perms[4] = "-r"[(file.stats.st_mode & S_IRGRP) > 0];
 	file.perms[5] = "-w"[(file.stats.st_mode & S_IWGRP) > 0];
 	file.perms[6] = third_permission(file.stats.st_mode, 'g');
+
 	file.perms[7] = "-r"[(file.stats.st_mode & S_IROTH) > 0];
 	file.perms[8] = "-w"[(file.stats.st_mode & S_IWOTH) > 0];
 	file.perms[9] = third_permission(file.stats.st_mode, 'o');
+
 	file.perms[10] = get_extended(file);
 	return (file);
 }
@@ -109,7 +113,7 @@ void		set_lsflags(int argc, char **argv)
 			while (*argv[a] != ' ' && *argv[a])
 			{
 				if (~ft_indexof(LSFLAGS, *argv[a]))
-					g_flags |= (1 << (ft_indexof(LSFLAGS, *argv[a]) - 1));
+					g_flags |= (1 << (ft_indexof(LSFLAGS, *argv[a])));
 				(void)*argv[a]++;
 			}
 }
