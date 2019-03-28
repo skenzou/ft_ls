@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/03/07 01:17:46 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/03/28 15:25:05 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,16 +105,16 @@ void		print_flags(void)
 
 void		set_lsflags(int argc, char **argv)
 {
-	int a;
+	int i;
 
-	a = -1;
-	while (++a < argc)
-		if (*argv[a] == '-' && (*argv[a]++))
-			while (*argv[a] != ' ' && *argv[a])
+	i = -1;
+	while (++i < argc)
+		if (*argv[i] == '-' && argv[i]++)
+			while (*(argv[i]) && *(argv[i]) != ' ')
 			{
-				if (~ft_indexof(LSFLAGS, *argv[a]))
-					g_flags |= (1 << (ft_indexof(LSFLAGS, *argv[a])));
-				(void)*argv[a]++;
+				if (ft_indexof(LSFLAGS, *argv[i]) >= 0)
+					g_flags |= (1 << (ft_indexof(LSFLAGS, *argv[i])));
+				argv[i]++;
 			}
 }
 
