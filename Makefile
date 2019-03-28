@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+         #
+#    By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2019/02/03 09:24:41 by aben-azz          #+#    #+#              #
-#    Updated: 2019/03/07 01:07:06 by midrissi         ###   ########.fr        #
+#    Created: 2019/02/03 09:24:41 by midrissi          #+#    #+#              #
+#    Updated: 2019/03/28 14:51:18 by midrissi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,23 +31,21 @@ _IBLUE			=	\x1b[44m
 _IPURPLE		=	\x1b[45m
 _ICYAN			=	\x1b[46m
 _IWHITE			=	\x1b[47m
-MSG				=	Compilation de ft_ls
+_MAGENTA		=	\x1b[35m
+
+MSG				=	Compiling ft_ls
 .PHONY: all, $(NAME), clean, fclean, re
 
 NAME = ft_ls
-
 cc = gcc
 C_FLAGS = -Wall -Wextra -Werror
-
+SRC_NAME = ft_ls.c
 OBJ_PATH = ./obj/
 LFT_PATH = ./libft/
 INC_PATH = ./includes
 SRC_PATH = ./srcs/
-
-SRC_NAME = ft_ls.c
 OBJ_NAME = $(SRC_NAME:.c=.o)
 INC_NAME = ft_ls.h
-
 SRC = $(addprefix $(SRC_PATH),$(SRC_NAME))
 LONGEST			=	$(shell echo $(notdir $(SRC)) | tr " " "\n" | awk ' { if (\
 				length > x ) { x = length; y = $$0 } }END{ print y }' | wc -c)
@@ -62,27 +60,25 @@ $(LIBFT_PATH)$(LIBFT_NAME):
 $(NAME): $(LIBFT_PATH)$(LIBFT_NAME) $(OBJ)
 		@echo
 		@make -C $(LFT_PATH)
-		@$(CC) -o $(NAME) $(FRAM) -L $(LFT_PATH) -lft $^ -o $@
-		@printf "$(_BOLD)$(_RED)Executable ./ft_ls pret \n$(_END)$(_CYAN)$(_END)"
-
+		@$(CC) -o $(NAME) -L $(LFT_PATH) -lft $^ -o $@
+		@printf "$(_BOLD)$(_RED)./ft_ls is ready for use\n$(_END)"
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 		@mkdir -p $(OBJ_PATH) 2> /dev/null || true
 		@$(CC) $(C_FLAGS) $(INC) -o $@ -c $<
-		@printf "$(_BOLD)$(_PURPLE)$(MSG)$(_END) $(_CYAN)%-$(LONGEST)s\
+		@printf "$(_BOLD)$(_BLUE)$(MSG)$(_END) $(_BOLD)$(_CYAN)%-$(LONGEST)s\
 		$(_END)" $(notdir $<)
-		@if test -s srcs/$*.c; then \
-		printf "$(_GREEN) [OK]\n$(_END)";\
-		else \
-		printf "$(_RED) [ERROR]\n$(_END)"; fi
-
+		@if test -s obj/$*.o; then \
+		printf "$(_GREEN) [SUCCES]\n$(_END)"; fi
 
 clean:
 		@make -C $(LFT_PATH) clean
 		@rm -rf $(OBJ_PATH)
+		@echo "$(_BOLD)$(_RED)Sucesfuly removed all objects from ft_ls$(_END)"
 
 fclean: clean
 		@make -C $(LFT_PATH) fclean
 		@rm -f $(NAME)
+		@echo "$(_BOLD)$(_RED)Sucessfuly removed ${NAME} from ft_ls$(_END)"
 
 re: fclean all

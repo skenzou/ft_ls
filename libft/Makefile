@@ -3,28 +3,34 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+         #
+#    By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2018/10/13 13:11:49 by aben-azz          #+#    #+#              #
-#    Updated: 2019/03/07 00:58:18 by midrissi         ###   ########.fr        #
+#    Created: 2018/10/09 12:43:35 by midrissi          #+#    #+#              #
+#    Updated: 2019/03/28 14:54:53 by midrissi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME			=	libft.a
-SRC				=	ft_counti.c ft_round.c ft_intlen.c ft_ftoa.c ft_pow.c \
-ft_count.c ft_indexof.c ft_isupper.c ft_islower.c ft_atoi.c ft_isalnum.c \
-ft_bzero.c ft_isascii.c ft_isdigit.c ft_isprint.c ft_itoa.c ft_lstadd.c  \
-ft_lstdelone.c ft_lstiter.c ft_lstmap.c ft_lstnew.c ft_memalloc.c ft_memccpy.c \
-ft_lstdel.c ft_memchr.c ft_memcmp.c ft_memcpy.c ft_memdel.c ft_memmove.c \
-ft_memset.c ft_putchar.c ft_putchar_fd.c ft_putendl.c ft_putendl_fd.c \
-ft_putnbr_fd.c ft_putstr.c ft_putstr_fd.c ft_strcat.c ft_strchr.c ft_strclr.c \
-ft_strcmp.c ft_strcpy.c ft_strdel.c ft_strdup.c ft_strequ.c ft_striter.c \
-ft_striteri.c ft_strjoin.c ft_strlcat.c ft_strlen.c ft_strmap.c ft_strtrim.c \
-ft_strsplit.c ft_strstr.c ft_strsub.c ft_toupper.c ft_strmapi.c ft_strncat.c \
-ft_strncmp.c ft_strncpy.c ft_strnequ.c ft_strnew.c ft_strnstr.c ft_strrchr.c \
-ft_putnbr.c ft_isalpha.c ft_tolower.c get_next_line.c ft_repeat_char.c \
-ft_utoa_base.c ft_intlen_base.c ft_min.c ft_max.c ft_printf.c geters.c \
-handle_numbers.c handlers.c ft_lstdestroy.c ft_lstrev.c ft_itoa_base.c
+NAME = libft.a
+SRC = ft_atoi.c ft_isalnum.c ft_bzero.c ft_isalpha.c \
+ft_isascii.c ft_isdigit.c ft_isprint.c ft_itoa.c \
+ft_lstadd.c ft_lstdel.c ft_lstdelone.c ft_lstiter.c \
+ft_lstmap.c ft_lstnew.c ft_memalloc.c ft_memccpy.c \
+ft_memchr.c ft_memcmp.c ft_memcpy.c ft_memdel.c \
+ft_memmove.c ft_memset.c ft_putchar.c ft_putchar_fd.c \
+ft_putendl.c ft_putendl_fd.c ft_putnbr.c ft_putnbr_fd.c \
+ft_putstr.c ft_putstr_fd.c ft_strcat.c ft_strchr.c \
+ft_strclr.c ft_strcmp.c ft_strcpy.c ft_strdel.c \
+ft_strdup.c ft_strequ.c ft_striter.c ft_striteri.c \
+ft_strjoin.c ft_strlcat.c ft_strlen.c ft_strmap.c \
+ft_strtrim.c ft_strsplit.c ft_strstr.c ft_strsub.c \
+ft_toupper.c ft_strmapi.c ft_strncat.c ft_strncmp.c \
+ft_strncpy.c ft_strnequ.c ft_strnew.c ft_strnstr.c \
+ft_strrchr.c ft_tolower.c get_next_line.c ft_itoa_base.c \
+ft_nputchar.c ft_ftoa.c ft_utoa_base.c ft_count_char.c \
+ft_lstpushback.c ft_lstrev.c ft_lstdestroy.c ft_count_words.c ft_printf.c \
+numbers.c format_geters.c handlers.c ft_splitdel.c \
+ft_abs.c ft_get_color.c ft_percent.c ft_interpolate.c ft_split_count.c \
+ft_strcjoin.c ft_indexof.c
 
 _END			=	\x1b[0m
 _BOLD			=	\x1b[1m
@@ -46,46 +52,47 @@ _IBLUE			=	\x1b[44m
 _IPURPLE		=	\x1b[45m
 _ICYAN			=	\x1b[46m
 _IWHITE			=	\x1b[47m
-INCLUDE			=	-Iincludes/
-CFLAGS			=	-Wall -Wextra -Werror
-MSG				=	Compilation de la libft:
-GCC				=	gcc $(CFLAGS) $(INCLUDE)
+MSG					= Compiling the libft:
 
-SRCPATH			=	./src
-SRCBINARY		=	./
-SRCOBJ			=	obj/
+OBJPATH			= obj/
+SRCPATH			=	srcs/
 
-OBJ				=	$(patsubst %.c,${OBJDIR}%.o,$(SRCS))
-SRCS			=	$(addprefix $(SRCPATH)/, $(SRC))
+SRCS := $(SRC:%=$(SRCPATH)%)
+OBJ := $(SRC:%.c=$(OBJPATH)%.o)
+
+COMP = gcc
+CFLAGS = -Wall -Wextra -Werror -I./includes -c
+AR = ar rcs
+
 LONGEST			=	$(shell echo $(notdir $(SRCS)) | tr " " "\n" | awk ' { if (\
 				length > x ) { x = length; y = $$0 } }END{ print y }' | wc -c)
 
-$(OBJDIR)%.o:	%.c
-	@$(GCC) -o $@ $< -c
-	@printf "$(_BOLD)$(_PURPLE)$(MSG)$(_END) $(_CYAN)%-$(LONGEST)s\
+all: $(NAME)
+
+$(NAME): $(OBJ)
+	@echo "$(_BOLD)$(_PURPLE)Making ${NAME}...$(_END)"
+	@$(AR) $(NAME) $(OBJ)
+	@echo "$(_BOLD)$(_GREEN)${NAME} is ready for use$(_END)"
+
+$(OBJ): obj/%.o: srcs/%.c
+	@if ! test -d $(OBJPATH); then \
+	mkdir -p $(OBJPATH); fi
+	@$(COMP) $(CFLAGS) -o $@ $<
+	@printf "$(_BOLD)$(_BLUE)$(MSG)$(_END) $(_BOLD)$(_CYAN)%-$(LONGEST)s\
 	$(_END)" $(notdir $<)
-	@if test -s $*.c; then \
-	printf "$(_GREEN)[OK]\n$(_END)";\
+	@if test -s obj/$*.o; then \
+	printf "$(_GREEN)[SUCCESS]\n$(_END)";\
 	else \
 	printf "$(_RED)[ERROR]\n$(_END)"; fi
 
-$(NAME):		$(OBJ)
-	@echo "$(_BOLD)$(_YELLOW)Creation de la libft ...$(_END)"
-	@ar rc $(NAME) $(OBJ)
-	@ranlib $(NAME)
-	@echo "$(_BOLD)$(_GREEN)Compilation de la libft terminée => ${NAME}$(_END)"
-
-all:			$(NAME)
-
 clean:
-			@/bin/rm -rf $(OBJ) $(SRCOBJ)
-			@echo "$(_BOLD)$(_RED)Suppression des objets terminée$(_END)"
+	@rm -rf $(OBJPATH)
+	@echo "$(_BOLD)$(_RED)Sucessfuly removed all objects from the libft$(_END)"
 
-fclean:			clean
-			@/bin/rm -rf $(NAME) .DS_Store
-			@echo "$(_BOLD)$(_RED)Suppression de {${NAME}} terminée$(_END)"
+fclean: clean
+	@rm -f $(NAME)
+	@echo "$(_BOLD)$(_RED)Sucessfuly removed ${NAME} from the libft$(_END)"
 
-re:			fclean  all
+re: fclean all
 
-
-.PHONY:		all clean fclean re
+.PHONY: all clean fclean re
