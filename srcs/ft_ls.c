@@ -6,13 +6,14 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/03 16:06:28 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/03 17:40:51 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
 char g_flags = 0;
+char g_multiarg = 0;
 
 int		get_max_name_length(t_list *files)
 {
@@ -30,6 +31,11 @@ int		get_max_name_length(t_list *files)
 	return (len);
 }
 
+void			print_path(char *path)
+{
+	ft_putstr(path);
+	ft_putstr(":\n");
+}
 
 static void		simple_print(t_list *files)
 {
@@ -130,6 +136,8 @@ void		list_insert(t_list **head, t_list **tail, t_list *needle)
 		prev = prev->next;
 	}
 }
+
+
 
 char		third_permission(int m, char type_user)
 {
@@ -263,11 +271,38 @@ static	void		ft_ls(char *name)
 		return ;
 	}
 	list_dir(dir, &head, &tail, name);
-	// sort_list(files);
+	if (g_multiarg)
+		print_path(name);
 	if (!g_flags || (~g_flags & F_LIST))
 		simple_print(head);
 	else
 		print_full_info(head);
+}
+
+static	int		sort_args(int argc, char **argv)
+{
+	int		sorted;
+	int		j;
+	char	*temp;
+
+	sorted = 0;
+	while (!sorted)
+	{
+		j = 1;
+		sorted = 1;
+		while (j < argc)
+		{
+			if (argv[j + 1] && ft_strcmp(argv[j], argv[j + 1]) > 0)
+			{
+				sorted = 0;
+				temp = argv[j];
+				argv[j] = argv[j + 1];
+				argv[j + 1] = temp;
+			}
+			j++;
+		}
+	}
+	return (1);
 }
 
 int					main(int argc, char **argv)
@@ -277,8 +312,14 @@ int					main(int argc, char **argv)
 	set_lsflags(argc, argv);
 	(g_flags > 0) && (argv++);
 	i = 1;
-	while (i < (argc - (g_flags > 0)))
+	argc = argc - (g_flags > 0);
+	(g_multiarg = argc > 2) && sort_args(argc, argv);
+	while (i < argc)
+	{
 		ft_ls(argv[i++]);
+		if (i >= 2 && i < argc)
+			ft_putchar('\n');
+	}
 	if (i == 1)
 		ft_ls(".");
 	// print_flags();
