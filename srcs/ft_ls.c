@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/03 17:40:51 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/03 20:31:12 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,33 +37,55 @@ void			print_path(char *path)
 	ft_putstr(":\n");
 }
 
+void			print_name(t_file *file, int size)
+{
+	if (S_ISDIR(file->stats.st_mode))
+		ft_printf(ANSI_CYAN "%-*s" ANSI_RESET, size, file->name);
+	else if (S_ISFIFO(file->stats.st_mode))
+		ft_printf(ANSI_YELLOW "%-*s" ANSI_RESET, size, file->name);
+	else if (S_ISLNK(file->stats.st_mode))
+		ft_printf(ANSI_PURPLE "%-*s" ANSI_RESET, size, file->name);
+	else if ((((file->stats.st_mode) & S_IXUSR) == S_IXUSR))
+		ft_printf(ANSI_RED "%-*s" ANSI_RESET, size, file->name);
+	else
+		ft_printf("%-*s", size, file->name);
+	if (size == -2)
+		ft_putstr("\n\n");
+	if (size == -1)
+		ft_putchar('\n');
+}
+
+int				check_next(t_list *list, int size)
+{
+	t_file file;
+
+	if (!list)
+		return (-1);
+	file = *((t_file*)list->content);
+	if (*(file.name) == '.' && !(*(file.name + 1)))
+		return (-2);
+	return (size);
+}
+
 static void		simple_print(t_list *files)
 {
 	size_t	size;
 	t_file	file;
 
+	if (!files)
+		return ;
 	size = get_max_name_length(files) + 1;
 	while (files)
 	{
 		file = *((t_file*)files->content);
+		if (g_multiarg && (*(file.name) == '.') && !(*(file.name + 1)))
+			print_path(file.path);
 		if (size < file.size)
 			size = file.size + 1;
 		if (*(file.name) != '.' || (g_flags & F_DOT))
-		{
-			if (S_ISDIR(file.stats.st_mode))
-				ft_printf(ANSI_CYAN "%-*s" ANSI_RESET, size, file.name);
-			else if (S_ISFIFO(file.stats.st_mode))
-				ft_printf(ANSI_YELLOW "%-*s" ANSI_RESET, size, file.name);
-			else if (S_ISLNK(file.stats.st_mode))
-				ft_printf(ANSI_PURPLE "%-*s" ANSI_RESET, size, file.name);
-			else if ((((file.stats.st_mode) & S_IXUSR) == S_IXUSR))
-				ft_printf(ANSI_RED "%-*s" ANSI_RESET, size, file.name);
-			else
-				ft_printf("%-*s", size, file.name);
-		}
+			print_name(&file, check_next(files->next, size));
 		files = files->next;
 	}
-	ft_printf("\n");
 }
 
 char		get_extended(t_file file)
@@ -111,12 +133,12 @@ void		list_insert(t_list **head, t_list **tail, t_list *needle)
 		*tail = *head;
 		return ;
 	}
-	if (ft_strcmp(((t_file *)(*head)->content)->name, ((t_file *)needle->content)->name) > 0)
+	if (ft_strcmp(((t_file *)(*head)->content)->full_path, ((t_file *)needle->content)->full_path) > 0)
 	{
 		ft_lstadd(head, needle);
 		return ;
 	}
-	if (ft_strcmp(((t_file *)(*tail)->content)->name, ((t_file *)needle->content)->name) < 0)
+	if (ft_strcmp(((t_file *)(*tail)->content)->full_path, ((t_file *)needle->content)->full_path) < 0)
 	{
 		(*tail)->next = needle;
 		*tail = needle;
@@ -126,7 +148,7 @@ void		list_insert(t_list **head, t_list **tail, t_list *needle)
 	prev = *head;
 	while (curr)
 	{
-		if (ft_strcmp(((t_file *)(curr)->content)->name, ((t_file *)needle->content)->name) > 0)
+		if (ft_strcmp(((t_file *)(curr)->content)->full_path, ((t_file *)needle->content)->full_path) > 0)
 		{
 			prev->next = needle;
 			needle->next = curr;
@@ -136,8 +158,6 @@ void		list_insert(t_list **head, t_list **tail, t_list *needle)
 		prev = prev->next;
 	}
 }
-
-
 
 char		third_permission(int m, char type_user)
 {
@@ -155,6 +175,9 @@ static void		cat_fullpath(t_file *file, char *name, char *path)
 	ft_strcpy(file->full_path, path);
 	ft_strcat(file->full_path, "/");
 	ft_strcat(file->full_path, name);
+	file->name = ft_strdup(name);
+	!file->name ? exit(1) : 0;
+	file->path = path;
 }
 
 t_file			create_file(char *name, char *path)
@@ -163,7 +186,6 @@ t_file			create_file(char *name, char *path)
 
 	cat_fullpath(&file, name, path);
 	lstat(file.full_path, &(file.stats));
-	file.name = name;
 	file.perms[0] = 0;
 	(S_ISREG(file.stats.st_mode)) && (file.perms[0] = '-');
 	(S_ISDIR(file.stats.st_mode)) && (file.perms[0] = 'd');
@@ -197,12 +219,10 @@ void		list_dir(DIR *dir, t_list **head, t_list **tail, char *path)
 	{
 		file = create_file(d->d_name, path);
 		file.size = ft_strlen(d->d_name);
-		file.name = d->d_name;
 		list = ft_lstnew((void *)&file, sizeof(t_file));
 		list == NULL ? exit(1) : 0;
 		list_insert(head, tail, list);
 	}
-	*tail = list;
 	closedir(dir);
 }
 
@@ -253,26 +273,31 @@ static void			set_lsflags(int argc, char **argv)
 			}
 }
 
-static	void		ft_ls(char *name)
+static	void		ft_ls(int argc, char **names)
 {
 	DIR			*dir;
 	t_list		*head;
 	t_list		*tail;
+	int			i;
 	char		*err;
 
 	head = NULL;
 	tail = NULL;
-	dir = opendir(name);
-	if (!dir)
+	i = argc == 1 ? 0 : 1;
+	while (i < argc)
 	{
-		err = ft_strjoin("ls: ", name);
-		perror(err);
-		ft_strdel(&err);
-		return ;
+		dir = opendir(names[i]);
+		if (!dir)
+		{
+			err = ft_strjoin("ls: ", names[i++]);
+			perror(err);
+			ft_strdel(&err);
+			continue ;
+		}
+		else
+			list_dir(dir, &head, &tail, names[i]);
+		i++;
 	}
-	list_dir(dir, &head, &tail, name);
-	if (g_multiarg)
-		print_path(name);
 	if (!g_flags || (~g_flags & F_LIST))
 		simple_print(head);
 	else
@@ -307,21 +332,14 @@ static	int		sort_args(int argc, char **argv)
 
 int					main(int argc, char **argv)
 {
-	int			i;
-
 	set_lsflags(argc, argv);
 	(g_flags > 0) && (argv++);
-	i = 1;
 	argc = argc - (g_flags > 0);
 	(g_multiarg = argc > 2) && sort_args(argc, argv);
-	while (i < argc)
-	{
-		ft_ls(argv[i++]);
-		if (i >= 2 && i < argc)
-			ft_putchar('\n');
-	}
-	if (i == 1)
-		ft_ls(".");
+	if (argc == 1 && (argv[0] = "."))
+		ft_ls(argc, argv);
+	else
+		ft_ls(argc, argv);
 	// print_flags();
 	return (0);
 }
