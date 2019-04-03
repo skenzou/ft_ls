@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/03 15:57:07 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/03 16:06:28 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,29 @@
 
 char g_flags = 0;
 
+int		get_max_name_length(t_list *files)
+{
+	int		len;
+	t_file	file;
+
+	len = 0;
+	while (files)
+	{
+		file = *((t_file*)files->content);
+		if ((int)ft_strlen(file.name) > len)
+			len = ft_strlen(file.name);
+		files = files->next;
+	}
+	return (len);
+}
+
+
 static void		simple_print(t_list *files)
 {
 	size_t	size;
 	t_file	file;
 
-	size = 10;
+	size = get_max_name_length(files) + 1;
 	while (files)
 	{
 		file = *((t_file*)files->content);
