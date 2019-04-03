@@ -6,13 +6,42 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/03 15:23:28 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/03 15:57:07 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
 char g_flags = 0;
+
+static void		simple_print(t_list *files)
+{
+	size_t	size;
+	t_file	file;
+
+	size = 10;
+	while (files)
+	{
+		file = *((t_file*)files->content);
+		if (size < file.size)
+			size = file.size + 1;
+		if (*(file.name) != '.' || (g_flags & F_DOT))
+		{
+			if (S_ISDIR(file.stats.st_mode))
+				ft_printf(ANSI_CYAN "%-*s" ANSI_RESET, size, file.name);
+			else if (S_ISFIFO(file.stats.st_mode))
+				ft_printf(ANSI_YELLOW "%-*s" ANSI_RESET, size, file.name);
+			else if (S_ISLNK(file.stats.st_mode))
+				ft_printf(ANSI_PURPLE "%-*s" ANSI_RESET, size, file.name);
+			else if ((((file.stats.st_mode) & S_IXUSR) == S_IXUSR))
+				ft_printf(ANSI_RED "%-*s" ANSI_RESET, size, file.name);
+			else
+				ft_printf("%-*s", size, file.name);
+		}
+		files = files->next;
+	}
+	ft_printf("\n");
+}
 
 char		get_extended(t_file file)
 {
@@ -48,7 +77,7 @@ void		sort_list(t_list *list)
 
 void		list_insert(t_list **head, t_list **tail, t_list *needle)
 {
-	t_list *list;
+	t_list *curr;
 	t_list *prev;
 
 	if (!tail || !head || !needle)
@@ -59,20 +88,29 @@ void		list_insert(t_list **head, t_list **tail, t_list *needle)
 		*tail = *head;
 		return ;
 	}
-	if (ft_strcmp(((t_file *)(*tail)->content)->name), ((t_file *)needle->content->name) < 0)
+	if (ft_strcmp(((t_file *)(*head)->content)->name, ((t_file *)needle->content)->name) > 0)
 	{
-		*tail->next = needle;
+		ft_lstadd(head, needle);
 		return ;
 	}
-	list = *head;
-	prev = list;
-	while (list)
+	if (ft_strcmp(((t_file *)(*tail)->content)->name, ((t_file *)needle->content)->name) < 0)
 	{
-		if (ft_strcmp(((t_file *)(list)->content)->name), ((t_file *)needle->content->name) > 0)
+		(*tail)->next = needle;
+		*tail = needle;
+		return ;
+	}
+	curr = (*head)->next;
+	prev = *head;
+	while (curr)
+	{
+		if (ft_strcmp(((t_file *)(curr)->content)->name, ((t_file *)needle->content)->name) > 0)
 		{
-
+			prev->next = needle;
+			needle->next = curr;
+			return ;
 		}
-		list = list->next;
+		curr = curr->next;
+		prev = prev->next;
 	}
 }
 
@@ -137,7 +175,7 @@ void		list_dir(DIR *dir, t_list **head, t_list **tail, char *path)
 		file.name = d->d_name;
 		list = ft_lstnew((void *)&file, sizeof(t_file));
 		list == NULL ? exit(1) : 0;
-		ft_lstadd(head, list);
+		list_insert(head, tail, list);
 	}
 	*tail = list;
 	closedir(dir);
@@ -160,35 +198,6 @@ static void		print_full_info(t_list *files)
 			file.name);
 		files = files->next;
 	}
-}
-
-static void		simple_print(t_list *files)
-{
-	size_t	size;
-	t_file	file;
-
-	size = 10;
-	while (files)
-	{
-		file = *((t_file*)files->content);
-		if (size < file.size)
-			size = file.size + 1;
-		if (*(file.name) != '.' || (g_flags & F_DOT))
-		{
-			if (S_ISDIR(file.stats.st_mode))
-				ft_printf(ANSI_CYAN "%-*s" ANSI_RESET, size, file.name);
-			else if (S_ISFIFO(file.stats.st_mode))
-				ft_printf(ANSI_YELLOW "%-*s" ANSI_RESET, size, file.name);
-			else if (S_ISLNK(file.stats.st_mode))
-				ft_printf(ANSI_PURPLE "%-*s" ANSI_RESET, size, file.name);
-			else if ((((file.stats.st_mode) & S_IXUSR) == S_IXUSR))
-				ft_printf(ANSI_RED "%-*s" ANSI_RESET, size, file.name);
-			else
-				ft_printf("%-*s", size, file.name);
-		}
-		files = files->next;
-	}
-	ft_printf("\n");
 }
 
 void			print_flags(void)
@@ -226,7 +235,8 @@ static	void		ft_ls(char *name)
 	t_list		*tail;
 	char		*err;
 
-	files = NULL;
+	head = NULL;
+	tail = NULL;
 	dir = opendir(name);
 	if (!dir)
 	{
@@ -235,12 +245,12 @@ static	void		ft_ls(char *name)
 		ft_strdel(&err);
 		return ;
 	}
-	list_dir(dir, &head, name);
-	sort_list(files);
+	list_dir(dir, &head, &tail, name);
+	// sort_list(files);
 	if (!g_flags || (~g_flags & F_LIST))
-		simple_print(files);
+		simple_print(head);
 	else
-		print_full_info(files);
+		print_full_info(head);
 }
 
 int					main(int argc, char **argv)
