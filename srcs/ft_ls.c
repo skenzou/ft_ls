@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/01 20:26:07 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/03 15:23:28 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,62 @@ char		get_extended(t_file file)
 {
 	(void)file;
 	return ('@');
+}
+
+void		sort_list(t_list *list)
+{
+	void	*temp;
+	t_list	*j;
+	int		sorted;
+
+	sorted = 0;
+	while (!sorted)
+	{
+		j = list;
+		sorted = 1;
+		while (j)
+		{
+			if (j->next && ft_strcmp(((t_file *)j->content)->name,
+									((t_file *)j->next->content)->name) > 0)
+			{
+				sorted = 0;
+				temp = j->content;
+				j->content = j->next->content;
+				j->next->content = temp;
+			}
+			j = j->next;
+		}
+	}
+}
+
+void		list_insert(t_list **head, t_list **tail, t_list *needle)
+{
+	t_list *list;
+	t_list *prev;
+
+	if (!tail || !head || !needle)
+		return ;
+	if (!(*head))
+	{
+		ft_lstadd(head, needle);
+		*tail = *head;
+		return ;
+	}
+	if (ft_strcmp(((t_file *)(*tail)->content)->name), ((t_file *)needle->content->name) < 0)
+	{
+		*tail->next = needle;
+		return ;
+	}
+	list = *head;
+	prev = list;
+	while (list)
+	{
+		if (ft_strcmp(((t_file *)(list)->content)->name), ((t_file *)needle->content->name) > 0)
+		{
+
+		}
+		list = list->next;
+	}
 }
 
 char		third_permission(int m, char type_user)
@@ -67,7 +123,7 @@ t_file			create_file(char *name, char *path)
 	return (file);
 }
 
-void		list_dir(DIR *dir, t_list **begin, char *path)
+void		list_dir(DIR *dir, t_list **head, t_list **tail, char *path)
 {
 	t_dirent	*d;
 	t_list		*list;
@@ -81,8 +137,9 @@ void		list_dir(DIR *dir, t_list **begin, char *path)
 		file.name = d->d_name;
 		list = ft_lstnew((void *)&file, sizeof(t_file));
 		list == NULL ? exit(1) : 0;
-		ft_lstadd(begin, list);
+		ft_lstadd(head, list);
 	}
+	*tail = list;
 	closedir(dir);
 }
 
@@ -165,7 +222,8 @@ static void			set_lsflags(int argc, char **argv)
 static	void		ft_ls(char *name)
 {
 	DIR			*dir;
-	t_list		*files;
+	t_list		*head;
+	t_list		*tail;
 	char		*err;
 
 	files = NULL;
@@ -177,7 +235,8 @@ static	void		ft_ls(char *name)
 		ft_strdel(&err);
 		return ;
 	}
-	list_dir(dir, &files, name);
+	list_dir(dir, &head, name);
+	sort_list(files);
 	if (!g_flags || (~g_flags & F_LIST))
 		simple_print(files);
 	else
