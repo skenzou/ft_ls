@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/04 19:29:07 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/04 21:53:08 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,11 @@ int		get_max_name_length(t_list *files)
 
 void			print_path(char *path)
 {
-	ft_putstr(path);
-	ft_putstr(":\n");
+	if (path)
+	{
+		ft_putstr(path);
+		ft_putstr(":\n");
+	}
 }
 
 void			print_name(t_file *file, int size)
@@ -189,8 +192,11 @@ char		third_permission(int m, char type_user)
 static void		cat_fullpath(t_file *file, char *name, char *path)
 {
 	ft_bzero(file->full_path, MAX_PATH_LEN);
-	ft_strcpy(file->full_path, path);
-	ft_strcat(file->full_path, "/");
+	if (path)
+	{
+		ft_strcpy(file->full_path, path);
+		ft_strcat(file->full_path, "/");
+	}
 	ft_strcat(file->full_path, name);
 	file->name = ft_strdup(name);
 	!file->name ? exit(1) : 0;
@@ -201,6 +207,7 @@ t_file			create_file(char *name, char *path)
 {
 	t_file		file;
 
+	ft_bzero((void *)&file, sizeof(t_file));
 	cat_fullpath(&file, name, path);
 	lstat(file.full_path, &(file.stats));
 	file.perms[0] = 0;
@@ -305,6 +312,7 @@ static void		print_link(t_file *file)
 {
 	char	buff[MAX_PATH_LEN];
 
+	ft_bzero(buff, MAX_PATH_LEN);
 	if (readlink(file->full_path, buff, MAX_PATH_LEN) >= 0)
 		ft_printf(" -> %s", buff);
 	else
@@ -370,41 +378,76 @@ static void			set_lsflags(int argc, char **argv)
 			}
 }
 
-// static int			check_link(char *name)
-// {
-// 	t_stat	stats;
-//
-// 	lstat(name, &stats);
-// 	if (S_ISFIFO(stats.st_mode) || S_ISLNK(stats.st_mode))
-// 		return (1);
-// 	return(0);
-// }
+void				handle_notdir(char *name, t_list **fiflnks)
+{
+	char	*err;
+	t_file	file;
+	t_list	*list;
+
+	ft_bzero((void *)&file, sizeof(t_file));
+	file = create_file(name, NULL);
+	if ((S_ISFIFO(file.stats.st_mode) || S_ISLNK(file.stats.st_mode)))
+	{
+		list = ft_lstnew((void *)&file, sizeof(t_file));
+		list == NULL ? exit(1) : 0;
+		ft_lstadd(fiflnks, list);
+	}
+	else
+	{
+		err = ft_strjoin("ls: ", name);
+		perror(err);
+		ft_strdel(&err);
+	}
+}
+
+static void			handle_fiflnks(t_list *fiflnks, t_list *head)
+{
+	if (fiflnks)
+	{
+		if (!(g_flags & F_DOT))
+		{
+			g_flags |= F_DOT;
+			if (!g_flags || (~g_flags & F_LIST))
+				simple_print(fiflnks);
+			else
+				print_full_info(fiflnks);
+			g_flags &= ~F_DOT;
+		}
+		else
+		{
+			if (!g_flags || (~g_flags & F_LIST))
+				simple_print(fiflnks);
+			else
+				print_full_info(fiflnks);
+		}
+		if (head)
+			ft_putchar('\n');
+	}
+}
 
 static	void		ft_ls(int argc, char **names)
 {
 	DIR			*dir;
 	t_list		*head;
 	t_list		*tail;
+	t_list		*fiflnks;
 	int			i;
-	char		*err;
 
 	head = NULL;
 	tail = NULL;
+	fiflnks = NULL;
 	i = argc == 1 ? 0 : 1;
 	while (i < argc)
 	{
 		dir = opendir(names[i]);
 		if (!dir)
-		{
-			err = ft_strjoin("ls: ", names[i++]);
-			perror(err);
-			ft_strdel(&err);
-			continue ;
-		}
+			handle_notdir(names[i], &fiflnks);
 		else
 			list_dir(dir, &head, &tail, names[i]);
 		i++;
 	}
+	ft_lstrev(&fiflnks);
+	handle_fiflnks(fiflnks, head);
 	if (!g_flags || (~g_flags & F_LIST))
 		simple_print(head);
 	else
