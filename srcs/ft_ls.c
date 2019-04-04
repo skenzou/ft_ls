@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/04 18:58:11 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/04 19:29:07 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -301,6 +301,15 @@ long long		get_totalsize(t_list *files)
 	}
 	return (size);
 }
+static void		print_link(t_file *file)
+{
+	char	buff[MAX_PATH_LEN];
+
+	if (readlink(file->full_path, buff, MAX_PATH_LEN) >= 0)
+		ft_printf(" -> %s", buff);
+	else
+		exit(1);
+}
 
 static void		print_full_info(t_list *files)
 {
@@ -313,19 +322,20 @@ static void		print_full_info(t_list *files)
 		file = *((t_file *)files->content);
 		if (*(file.name) == '.' && !(*(file.name + 1)))
 		{
-			print_path(file.path);
+			if (g_multiarg)
+				print_path(file.path);
 			ft_printf("%total %lld\n", get_totalsize(files));
 		}
 		if (*(file.name) != '.' || (g_flags & F_DOT))
 		{
-			ft_printf("%s %*hu %-*s %-*s %*lld %.12s ",
-				file.perms,
-				length[0], file.stats.st_nlink,
-				length[2] + 1, getpwuid(file.stats.st_uid)->pw_name,
-				length[3] + 1, getgrgid(file.stats.st_gid)->gr_name,
-				length[1], file.stats.st_size,
-				ctime(&file.stats.st_mtimespec.tv_sec) + 4);
-			print_name(&file, check_next(files->next, get_max_name_length(files) + 1));
+			ft_printf("%s %*hu %-*s %-*s %*lld %.12s ", file.perms, length[0],
+			file.stats.st_nlink, length[2] + 1,
+			getpwuid(file.stats.st_uid)->pw_name, length[3] + 1,
+			getgrgid(file.stats.st_gid)->gr_name, length[1], file.stats.st_size,
+			ctime(&file.stats.st_mtimespec.tv_sec) + 4);
+			print_name(&file, check_next(files->next, 0));
+			if (S_ISLNK(file.stats.st_mode))
+				print_link(&file);
 			ft_putchar('\n');
 		}
 		files = files->next;
