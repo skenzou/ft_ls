@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/04 16:37:00 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/04 18:52:58 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,18 @@ void			print_name(t_file *file, int size)
 		ft_printf(ANSI_RED "%-*s" ANSI_RESET, size, file->name);
 	else
 		ft_printf("%-*s", size, file->name);
-	if (size == -2)
-		ft_putstr("\n\n");
-	if (size == -1)
-		ft_putchar('\n');
+	if (g_flags & F_LIST)
+	{
+		if (size == -2)
+			ft_putchar('\n');
+	}
+	else
+	{
+		if (size == -2)
+			ft_putstr("\n\n");
+		if (size == -1)
+			ft_putchar('\n');
+	}
 }
 
 int				check_next(t_list *list, int size)
@@ -215,6 +223,7 @@ t_file			create_file(char *name, char *path)
 	file.perms[9] = third_permission(file.stats.st_mode, 'o');
 	//file.perms[10] = get_extended(file);
 	file.perms[10] = ' ';
+	file.perms[11] = '\0';
 	return (file);
 }
 
@@ -249,7 +258,7 @@ int	ft_intlen_base(uintmax_t nbr, int base)
 	return (digits);
 }
 
-static void		set_max_length(t_list *files, int *length)
+static void		set_max_length(t_list *files, int length[4])
 {
 	t_file	f;
 
@@ -272,6 +281,27 @@ static void		set_max_length(t_list *files, int *length)
 	}
 }
 
+long long		get_totalsize(t_list *files)
+{
+	long long		size;
+	t_file			file;
+
+	size = 0;
+	while (files)
+	{
+		file = *((t_file*)files->content);
+		size += file.stats.st_blocks;
+		files = files->next;
+		if (g_multiarg && files)
+		{
+			file = *((t_file*)files->content);
+			if (*(file.name) == '.' && !(*(file.name + 1)))
+				break ;
+		}
+	}
+	return (size);
+}
+
 static void		print_full_info(t_list *files)
 {
 	t_file	file;
@@ -281,16 +311,23 @@ static void		print_full_info(t_list *files)
 	while (files)
 	{
 		file = *((t_file *)files->content);
-		ft_printf("%11s %*ld %-*s %-*s %*lld %.12s ",
-			file.perms,
-			length[0], file.stats.st_nlink,
-			length[2] + 1, getpwuid(file.stats.st_uid)->pw_name,
-			length[3] + 1, getgrgid(file.stats.st_gid)->gr_name,
-			length[1], file.stats.st_size,
-			ctime(&file.stats.st_mtimespec.tv_sec) + 4);
-		print_name(&file, check_next(files->next,
-				get_max_name_length(files) + 1));
-		ft_putchar('\n');
+		if (*(file.name) == '.' && !(*(file.name + 1)))
+		{
+			print_path(file.path);
+			ft_printf("%total %lld\n", get_totalsize(files));
+		}
+		if (*(file.name) != '.' || (g_flags & F_DOT))
+		{
+			ft_printf("%11s %*hu %-*s %-*s %*lld %.12s ",
+				file.perms,
+				length[0], file.stats.st_nlink,
+				length[2] + 1, getpwuid(file.stats.st_uid)->pw_name,
+				length[3] + 1, getgrgid(file.stats.st_gid)->gr_name,
+				length[1], file.stats.st_size,
+				ctime(&file.stats.st_mtimespec.tv_sec) + 4);
+			print_name(&file, check_next(files->next, get_max_name_length(files) + 1));
+			ft_putchar('\n');
+		}
 		files = files->next;
 	}
 }
