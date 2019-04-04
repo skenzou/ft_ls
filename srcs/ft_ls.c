@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/04 18:52:58 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/04 18:58:11 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -318,7 +318,7 @@ static void		print_full_info(t_list *files)
 		}
 		if (*(file.name) != '.' || (g_flags & F_DOT))
 		{
-			ft_printf("%11s %*hu %-*s %-*s %*lld %.12s ",
+			ft_printf("%s %*hu %-*s %-*s %*lld %.12s ",
 				file.perms,
 				length[0], file.stats.st_nlink,
 				length[2] + 1, getpwuid(file.stats.st_uid)->pw_name,
