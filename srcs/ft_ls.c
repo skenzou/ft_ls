@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/03 20:31:12 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/04 05:31:41 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,12 @@ int		get_max_name_length(t_list *files)
 		if ((int)ft_strlen(file.name) > len)
 			len = ft_strlen(file.name);
 		files = files->next;
+		if (g_multiarg && files)
+		{
+			file = *((t_file*)files->content);
+			if (*(file.name) == '.' && !(*(file.name + 1)))
+				break ;
+		}
 	}
 	return (len);
 }
@@ -79,7 +85,10 @@ static void		simple_print(t_list *files)
 	{
 		file = *((t_file*)files->content);
 		if (g_multiarg && (*(file.name) == '.') && !(*(file.name + 1)))
+		{
+			size = get_max_name_length(files) + 1;
 			print_path(file.path);
+		}
 		if (size < file.size)
 			size = file.size + 1;
 		if (*(file.name) != '.' || (g_flags & F_DOT))
@@ -272,6 +281,16 @@ static void			set_lsflags(int argc, char **argv)
 				argv[i]++;
 			}
 }
+
+// static int			check_link(char *name)
+// {
+// 	t_stat	stats;
+//
+// 	lstat(name, &stats);
+// 	if (S_ISFIFO(stats.st_mode) || S_ISLNK(stats.st_mode))
+// 		return (1);
+// 	return(0);
+// }
 
 static	void		ft_ls(int argc, char **names)
 {
