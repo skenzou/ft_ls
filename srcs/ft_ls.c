@@ -6,12 +6,12 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/04 05:31:41 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/04 15:21:47 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
-
+#include <sys/ioctl.h>
 char g_flags = 0;
 char g_multiarg = 0;
 
@@ -213,7 +213,8 @@ t_file			create_file(char *name, char *path)
 	file.perms[7] = "-r"[(file.stats.st_mode & S_IROTH) > 0];
 	file.perms[8] = "-w"[(file.stats.st_mode & S_IWOTH) > 0];
 	file.perms[9] = third_permission(file.stats.st_mode, 'o');
-	file.perms[10] = get_extended(file);
+	//file.perms[10] = get_extended(file);
+	file.perms[10] = ' ';
 	return (file);
 }
 
@@ -235,21 +236,61 @@ void		list_dir(DIR *dir, t_list **head, t_list **tail, char *path)
 	closedir(dir);
 }
 
+int	ft_intlen_base(uintmax_t nbr, int base)
+{
+	int digits;
+
+	digits = 0;
+	while (nbr)
+	{
+		digits++;
+		nbr /= base;
+	}
+	return (digits);
+}
+
+static void		set_max_length(t_list *files, int *length)
+{
+	t_file	f;
+
+	length[0] = 0;
+	length[1] = 0;
+	length[2] = 0;
+	length[3] = 0;
+	while (files)
+	{
+		f = *((t_file *)files->content);
+		if (ft_intlen_base(f.stats.st_nlink, 10) > length[0])
+			length[0] = ft_intlen_base(f.stats.st_nlink, 10);
+		if (ft_intlen_base(f.stats.st_size, 10) > length[1])
+			length[1] = ft_intlen_base(f.stats.st_size, 10);
+		if ((int)ft_strlen(getpwuid(f.stats.st_uid)->pw_name) > length[2])
+			length[2] = (int)ft_strlen(getpwuid(f.stats.st_uid)->pw_name);
+		if ((int)ft_strlen(getgrgid(f.stats.st_gid)->gr_name) > length[3])
+			length[3] = (int)ft_strlen(getgrgid(f.stats.st_gid)->gr_name);
+		files = files->next;
+	}
+}
+
 static void		print_full_info(t_list *files)
 {
 	t_file	file;
+	int		length[4];
 
+	set_max_length(files, length);
 	while (files)
 	{
 		file = *((t_file *)files->content);
-		ft_printf("%s %ld %s %s %lld %.12s %s\n",
+		ft_printf("%11s %*ld %-*s %-*s %*lld %.12s ",
 			file.perms,
-			file.stats.st_nlink,
-			getpwuid(file.stats.st_uid)->pw_name,
-			getgrgid(file.stats.st_gid)->gr_name,
-			file.stats.st_size,
-			ctime(&file.stats.st_mtimespec.tv_sec) + 4,
-			file.name);
+			length[0], file.stats.st_nlink,
+			length[2] + 1, getpwuid(file.stats.st_uid)->pw_name,
+			length[3] + 1, getgrgid(file.stats.st_gid)->gr_name,
+			length[1], file.stats.st_size,
+			ctime(&file.stats.st_mtimespec.tv_sec) + 4);
+		print_name(&file, check_next(files->next,
+				get_max_name_length(files) + 1));
+		ft_putchar('\n');
 		files = files->next;
 	}
 }
@@ -349,8 +390,18 @@ static	int		sort_args(int argc, char **argv)
 	return (1);
 }
 
+void    get_term_info(void)
+{
+	struct winsize w;
+
+	if (ioctl(0, TIOCGWINSZ, &w) == -1)
+		ft_printf("Error while retrieving terminal informations");
+	printf("col: %d|\n row: %d\n", w.ws_col, w.ws_row);
+}
+
 int					main(int argc, char **argv)
 {
+	//get_term_info();
 	set_lsflags(argc, argv);
 	(g_flags > 0) && (argv++);
 	argc = argc - (g_flags > 0);
