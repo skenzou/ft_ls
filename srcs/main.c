@@ -6,14 +6,14 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/06 19:46:12 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/06 21:43:19 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-char g_flags = 0;
-char g_multiarg = 0;
+char g_flags;
+char g_multiarg;
 
 /*
 **void			print_flags(void)
@@ -57,25 +57,6 @@ static void		set_lsflags(int argc, char **argv)
 			}
 }
 
-t_file			create_file(char *name, char *path)
-{
-	t_file		file;
-
-	ft_bzero((void *)&file, sizeof(t_file));
-	cat_fullpath(&file, name, path);
-	lstat(file.full_path, &(file.stats));
-	file.perms[0] = 0;
-	(S_ISREG(file.stats.st_mode)) && (file.perms[0] = '-');
-	(S_ISDIR(file.stats.st_mode)) && (file.perms[0] = 'd');
-	(S_ISBLK(file.stats.st_mode)) && (file.perms[0] = 'b');
-	(S_ISCHR(file.stats.st_mode)) && (file.perms[0] = 'c');
-	(S_ISFIFO(file.stats.st_mode)) && (file.perms[0] = 'p');
-	(S_ISLNK(file.stats.st_mode)) && (file.perms[0] = 'l');
-	(S_ISSOCK(file.stats.st_mode)) && (file.perms[0] = 's');
-	set_perms(&file);
-	return (file);
-}
-
 static	void	ft_ls(int argc, char **names)
 {
 	DIR			*dir;
@@ -90,8 +71,7 @@ static	void	ft_ls(int argc, char **names)
 	i = argc == 1 ? 0 : 1;
 	while (i < argc)
 	{
-		dir = opendir(names[i]);
-		if (!dir)
+		if (!(dir = opendir(names[i])))
 			handle_notdir(names[i], &fiflnks);
 		else
 			list_dir(dir, &head, &tail, names[i]);
@@ -142,6 +122,5 @@ int				main(int argc, char **argv)
 		ft_ls(argc, argv);
 	else
 		ft_ls(argc, argv);
-	// print_flags();
 	return (0);
 }

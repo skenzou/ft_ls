@@ -1,0 +1,149 @@
+void			list_parse_print(t_list *files, int id, int size)
+{
+	int		i;
+	t_file	file;
+
+	i = 0;
+	while (files)
+	{
+		file = *((t_file*)files->content);
+		if (*(file.name) != '.' || (g_flags & F_DOT))
+		{
+			if (i % col == mod)
+				print_name(&file, size);
+			i++;
+		}
+		files = files->next;
+		if (files && ((t_file *)files->content)->id != id)
+			return ;
+	}
+}
+
+void			simple_print_col(t_list *head)
+{
+	size_t	size;
+	int		col;
+	int		mod;
+	int		id;
+
+	if (!head)
+		return ;
+	size = get_max_name_length(head) + 1;
+	col = get_col(head);
+	mod = 0;
+	g_multiarg && print_path(((t_file *)head->content)->path);
+	id = ((t_file *)head->content)->id;
+	while (mod < col)
+	{
+		list_parse_print(head, id, size, mod);
+		++mod < col ? ft_putchar('\n') : 0;
+	}
+	ft_putchar('\n');
+	if (files)
+	{
+		ft_putchar('\n');
+		simple_print_col(files);
+	}
+}
+
+/*
+**void			print_flags(void)
+**{
+**	(g_flags & F_LIST) && (ft_printf("g_flags: F_LIST\n"));
+**	(g_flags & F_RECURSIVE) && (ft_printf("g_flags: F_RECURSIVE\n"));
+**	(g_flags & F_DOT) && (ft_printf("g_flags: F_DOT\n"));
+**	(g_flags & F_REVERSE) && (ft_printf("g_flags: F_REVERSE\n"));
+**	(g_flags & F_SORT_TIME) && (ft_printf("g_flags: F_SORT TIME\n"));
+**	(g_flags & F_LAST_ACCESS_TIME) && (ft_printf("g_flags: F_ACCESS TIME\n"));
+**	(g_flags & F_SORT_OFF) && (ft_printf("g_flags: F_SORT OFF\n"));
+**	(g_flags & F_COLOR) && (ft_printf("g_flags: F_COLOR\n"));
+**}
+**void 			print_list(t_list *files)
+**{
+**	t_file file;
+**	printf("====================================================\n");
+**	while (files)
+**	{
+**		file = *((t_file *)files->content);
+**		printf("files.id %d -> %s\n", file.id, file.full_path);
+**		files = files->next;
+**	}
+**	printf("====================================================\n");
+**}
+*/
+
+
+void		simple_print(t_list *files)
+{
+	size_t	size;
+	t_file	file;
+
+	if (!files)
+		return ;
+	size = get_max_name_length(files) + 1;
+	while (files)
+	{
+		file = *((t_file*)files->content);
+		if (g_multiarg && (*(file.name) == '.') && !(*(file.name + 1)))
+		{
+			size = get_max_name_length(files) + 1;
+			print_path(file.path);
+		}
+		if (size < file.size)
+			size = file.size + 1;
+		if (*(file.name) != '.' || (g_flags & F_DOT))
+			print_name(&file, check_next(files->next, size));
+		files = files->next;
+	}
+}
+
+void		simple_print_col(t_list *head)
+{
+	size_t	size;
+	t_file	file;
+	int		i;
+	int		col;
+	int		mod;
+	t_list	*files;
+	int		id;
+
+	if (!head)
+		return ;
+	size = get_max_name_length(head) + 1;
+	col = get_col(head);
+	mod = 0;
+	if (g_multiarg)
+		print_path(((t_file *)head->content)->path);
+	id = ((t_file *)head->content)->id;
+	while (mod < col)
+	{
+		i = 0;
+		files = head;
+		while (files)
+		{
+			file = *((t_file*)files->content);
+			if (i % col == mod)
+			{
+				// printf("file,id %d : file.name %s\n", file.id, file.name);
+				if (size < file.size)
+					size = file.size + 1;
+				if (*(file.name) != '.' || (g_flags & F_DOT))
+					print_name(&file, size);
+			}
+			if (*(file.name) != '.' || (g_flags & F_DOT))
+				i++;
+			files = files->next;
+			if (files && ((t_file *)files->content)->id != id)
+				break ;
+		}
+		mod++;
+		if (mod < col)
+			ft_putchar('\n');
+	}
+	ft_putchar('\n');
+	if (files)
+	{
+		ft_putchar('\n');
+		simple_print_col(files);
+	}
+}

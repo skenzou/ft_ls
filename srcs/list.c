@@ -6,13 +6,13 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:32:19 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/06 19:46:13 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/06 21:20:55 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void	list_parse(t_list **head, t_list *needle, char reverse)
+void	list_insert_loop(t_list **head, t_list *needle, char reverse)
 {
 	t_list *curr;
 	t_list *prev;
@@ -63,7 +63,7 @@ void	list_insertrev(t_list **head, t_list **tail, t_list *needle)
 		*tail = needle;
 		return ;
 	}
-	list_parse(head, needle, 1);
+	list_insert_loop(head, needle, 1);
 }
 
 void	list_insert(t_list **head, t_list **tail, t_list *needle)
@@ -89,7 +89,7 @@ void	list_insert(t_list **head, t_list **tail, t_list *needle)
 		*tail = needle;
 		return ;
 	}
-	list_parse(head, needle, 0);
+	list_insert_loop(head, needle, 0);
 }
 
 void	list_dir(DIR *dir, t_list **head, t_list **tail, char *path)

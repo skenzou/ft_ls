@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:34:48 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/06 19:46:14 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/06 21:37:46 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ char		third_permission(int m, char type_user)
 
 void		cat_fullpath(t_file *file, char *name, char *path)
 {
-	ft_bzero(file->full_path, MAX_PATH_LEN);
+	ft_bzero((void *)&(file->full_path), MAX_PATH_LEN);
 	if (path)
 	{
 		ft_strcpy(file->full_path, path);
