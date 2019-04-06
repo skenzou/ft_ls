@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:32:19 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/06 14:14:59 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/06 18:15:16 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,45 @@ void		sort_list(t_list *list)
 			}
 			j = j->next;
 		}
+	}
+}
+
+void		list_insertrev(t_list **head, t_list **tail, t_list *needle)
+{
+	t_list *curr;
+	t_list *prev;
+
+	if (!tail || !head || !needle)
+		return ;
+	if (!(*head))
+	{
+		ft_lstadd(head, needle);
+		*tail = *head;
+		return ;
+	}
+	if (ft_strcmp(((t_file *)(*head)->content)->full_path, ((t_file *)needle->content)->full_path) <= 0)
+	{
+		ft_lstadd(head, needle);
+		return ;
+	}
+	if (ft_strcmp(((t_file *)(*tail)->content)->full_path, ((t_file *)needle->content)->full_path) >= 0)
+	{
+		(*tail)->next = needle;
+		*tail = needle;
+		return ;
+	}
+	curr = (*head)->next;
+	prev = *head;
+	while (curr)
+	{
+		if (ft_strcmp(((t_file *)(curr)->content)->full_path, ((t_file *)needle->content)->full_path) <= 0)
+		{
+			prev->next = needle;
+			needle->next = curr;
+			return ;
+		}
+		curr = curr->next;
+		prev = prev->next;
 	}
 }
 
@@ -77,21 +116,24 @@ void		list_insert(t_list **head, t_list **tail, t_list *needle)
 	}
 }
 
-void		list_dir(DIR *dir, t_list **head, t_list **tail, char *path, int i)
+void		list_dir(DIR *dir, t_list **head, t_list **tail, char *path)
 {
 	t_dirent	*d;
 	t_list		*list;
 	t_file		file;
+	static int	id;
 
 	list = NULL;
 	while ((d = readdir(dir)))
 	{
 		file = create_file(d->d_name, path);
 		file.size = ft_strlen(d->d_name);
-		file.id = i;
+		file.id = id;
 		list = ft_lstnew((void *)&file, sizeof(t_file));
 		list == NULL ? exit(1) : 0;
-		list_insert(head, tail, list);
+		(g_flags & F_REVERSE) ? list_insertrev(head, tail, list)
+								: list_insert(head, tail, list);
 	}
+	id++;
 	closedir(dir);
 }

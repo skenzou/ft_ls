@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:31:17 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/06 17:11:15 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/06 18:28:50 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <dirent.h>
 # include <time.h>
 # include <sys/ioctl.h>
+# include <sys/xattr.h>
 # define LSFLAGS			"lRarftuG"
 # define F_LIST				(1 << 0)
 # define F_RECURSIVE		(1 << 1)
@@ -104,8 +105,10 @@ void						cat_fullpath(t_file *file, char *name, char *path);
 */
 void						sort_list(t_list *list);
 void						list_insert(t_list **h, t_list **t, t_list *n);
-void						list_dir(DIR *d, t_list **h, t_list **t, char *p,
-		int i);
+void						list_insertrev(t_list **head, t_list **tail,
+																t_list *needle);
+void						list_dir(DIR *dir, t_list **head, t_list **tail,
+																	char *path);
 /*
 ** MAIN.C
 */

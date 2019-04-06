@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ls.c                                            :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/06 14:15:01 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/06 18:20:05 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,7 @@ t_file			create_file(char *name, char *path)
 	file.perms[7] = "-r"[(file.stats.st_mode & S_IROTH) > 0];
 	file.perms[8] = "-w"[(file.stats.st_mode & S_IWOTH) > 0];
 	file.perms[9] = third_permission(file.stats.st_mode, 'o');
-	//file.perms[10] = get_extended(file);
-	file.perms[10] = ' ';
+	file.perms[10] = get_extended(file);
 	file.perms[11] = '\0';
 	return (file);
 }
@@ -106,10 +105,11 @@ static	void		ft_ls(int argc, char **names)
 		if (!dir)
 			handle_notdir(names[i], &fiflnks);
 		else
-			list_dir(dir, &head, &tail, names[i], i);
+			list_dir(dir, &head, &tail, names[i]);
 		i++;
 	}
-	ft_lstrev(&fiflnks);
+	if (!(g_flags & F_REVERSE))
+		ft_lstrev(&fiflnks);
 	handle_fiflnks(fiflnks, head);
 	if (!g_flags || (~g_flags & F_LIST))
 		simple_print_col(head);
