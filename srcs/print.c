@@ -6,24 +6,14 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:23:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/06 14:15:00 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/06 17:07:36 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void			print_name(t_file *file, int size)
+void			print_line(int size)
 {
-	if (S_ISDIR(file->stats.st_mode))
-		ft_printf(ANSI_CYAN "%-*s" ANSI_RESET, size, file->name);
-	else if (S_ISFIFO(file->stats.st_mode))
-		ft_printf(ANSI_YELLOW "%-*s" ANSI_RESET, size, file->name);
-	else if (S_ISLNK(file->stats.st_mode))
-		ft_printf(ANSI_PURPLE "%-*s" ANSI_RESET, size, file->name);
-	else if ((((file->stats.st_mode) & S_IXUSR) == S_IXUSR))
-		ft_printf(ANSI_RED "%-*s" ANSI_RESET, size, file->name);
-	else
-		ft_printf("%-*s", size, file->name);
 	if (g_flags & F_LIST)
 	{
 		if (size == -2)
@@ -36,6 +26,29 @@ void			print_name(t_file *file, int size)
 		if (size == -1)
 			ft_putchar('\n');
 	}
+}
+
+void			print_name(t_file *file, int size)
+{
+	if (S_ISDIR(file->stats.st_mode))
+		ft_printf(ANSI_BOLDCYAN "%-*s" ANSI_RESET, size, file->name);
+	else if (S_ISFIFO(file->stats.st_mode))
+		ft_printf(ANSI_YELLOW "%-*s" ANSI_RESET, size, file->name);
+	else if (S_ISLNK(file->stats.st_mode))
+		ft_printf(ANSI_PURPLE "%-*s" ANSI_RESET, size, file->name);
+	else if (S_ISSOCK(file->stats.st_mode))
+		ft_printf(ANSI_GREEN "%-*s" ANSI_RESET, size, file->name);
+	else if (S_ISCHR(file->stats.st_mode))
+		ft_printf("\x1b[43m\x1b[34m%-s\x1b[0m%*s",
+								file->name, size - ft_strlen(file->name), "");
+	else if (S_ISBLK(file->stats.st_mode))
+		ft_printf("\x1b[46m\x1b[34m%-s\x1b[0m%*s",
+								file->name, size - ft_strlen(file->name), "");
+	else if ((((file->stats.st_mode) & S_IXUSR) == S_IXUSR))
+		ft_printf(ANSI_RED "%-*s" ANSI_RESET, size, file->name);
+	else
+		ft_printf("%-*s", size, file->name);
+	print_line(size);
 }
 
 void		print_full_info(t_list *files)

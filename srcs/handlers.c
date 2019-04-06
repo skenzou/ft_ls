@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:34:48 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/06 14:14:05 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/06 16:44:37 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@ void		handle_notdir(char *name, t_list **fiflnks)
 
 	ft_bzero((void *)&file, sizeof(t_file));
 	file = create_file(name, NULL);
-	if ((S_ISFIFO(file.stats.st_mode) || S_ISLNK(file.stats.st_mode)))
+	if (S_ISFIFO(file.stats.st_mode) || S_ISLNK(file.stats.st_mode) ||
+		S_ISREG(file.stats.st_mode) || S_ISBLK(file.stats.st_mode) ||
+		S_ISCHR(file.stats.st_mode) || S_ISSOCK(file.stats.st_mode))
 	{
 		list = ft_lstnew((void *)&file, sizeof(t_file));
 		list == NULL ? exit(1) : 0;
@@ -42,7 +44,7 @@ void		handle_fiflnks(t_list *fiflnks, t_list *head)
 		{
 			g_flags |= F_DOT;
 			if (!g_flags || (~g_flags & F_LIST))
-				simple_print(fiflnks);
+				simple_print_col(fiflnks);
 			else
 				print_full_info(fiflnks);
 			g_flags &= ~F_DOT;
@@ -50,7 +52,7 @@ void		handle_fiflnks(t_list *fiflnks, t_list *head)
 		else
 		{
 			if (!g_flags || (~g_flags & F_LIST))
-				simple_print(fiflnks);
+				simple_print_col(fiflnks);
 			else
 				print_full_info(fiflnks);
 		}
@@ -72,7 +74,7 @@ void		set_max_length(t_list *files, int len[4])
 		f = *((t_file *)files->content);
 		len[0] = ft_max(len[0], ft_intlen_base(f.stats.st_nlink, 10));
 		len[1] = ft_max(len[1], ft_intlen_base(f.stats.st_size, 10));
-		len[2] = ft_max(len[1], ft_strlen(getpwuid(f.stats.st_uid)->pw_name));
+		len[2] = ft_max(len[2], ft_strlen(getpwuid(f.stats.st_uid)->pw_name));
 		len[3] = ft_max(len[3], ft_strlen(getgrgid(f.stats.st_gid)->gr_name));
 		files = files->next;
 	}

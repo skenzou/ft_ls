@@ -6,7 +6,7 @@
 #    By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/03 09:24:41 by midrissi          #+#    #+#              #
-#    Updated: 2019/04/06 12:39:37 by aben-azz         ###   ########.fr        #
+#    Updated: 2019/04/06 16:50:29 by midrissi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,7 +39,7 @@ MSG				=	Compiling ft_ls
 NAME = ft_ls
 cc = gcc
 C_FLAGS = -Wall -Wextra -Werror
-SRC_NAME = ft_ls.c print.c others.c list.c handlers.c geters.c
+SRC_NAME = main.c print.c utils.c list.c handlers.c geters.c
 OBJ_PATH = ./obj/
 LFT_PATH = ./libft/
 INC_PATH = ./includes
@@ -63,7 +63,7 @@ $(NAME): $(LIBFT_PATH)$(LIBFT_NAME) $(OBJ)
 		@$(CC) -o $(NAME) -L $(LFT_PATH) -lft $^ -o $@
 		@printf "$(_BOLD)$(_RED)./ft_ls is ready for use\n$(_END)"
 
-$(OBJ_PATH)%.o: $(SRC_PATH)%.c
+$(OBJ_PATH)%.o: $(SRC_PATH)%.c ./includes/ft_ls.h
 		@mkdir -p $(OBJ_PATH) 2> /dev/null || true
 		@$(CC) $(C_FLAGS) $(INC) -o $@ -c $<
 		@printf "$(_BOLD)$(_BLUE)$(MSG)$(_END) $(_BOLD)$(_CYAN)%-$(LONGEST)s\
