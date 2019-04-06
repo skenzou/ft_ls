@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/04 13:56:36 by midrissi          #+#    #+#             */
-/*   Updated: 2019/03/28 14:54:43 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/05 20:09:07 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,8 +142,10 @@ char			*get_string(t_format *fmt, va_list ap);
 intmax_t		ft_abs(intmax_t nb);
 int				ft_get_color(int color1, int color2, double percentage);
 double			ft_percent(int start, int end, int curr);
-int					ft_split_count(char **split);
-void   		ft_splitdel(char **split);
-char		*ft_strcjoin(char const *s1, char const *s2, char c);
-int			ft_indexof(char *str, char c);
+int				ft_split_count(char **split);
+void			ft_splitdel(char **split);
+char			*ft_strcjoin(char const *s1, char const *s2, char c);
+int				ft_indexof(char *str, char c);
+void			ft_lstdelcurr(t_list *prev, t_list *curr, t_list **head);
+
 #endif

@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/04 21:53:08 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/06 03:33:42 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,28 +15,6 @@
 char g_flags = 0;
 char g_multiarg = 0;
 
-int		get_max_name_length(t_list *files)
-{
-	int		len;
-	t_file	file;
-
-	len = 0;
-	while (files)
-	{
-		file = *((t_file*)files->content);
-		if ((int)ft_strlen(file.name) > len)
-			len = ft_strlen(file.name);
-		files = files->next;
-		if (g_multiarg && files)
-		{
-			file = *((t_file*)files->content);
-			if (*(file.name) == '.' && !(*(file.name + 1)))
-				break ;
-		}
-	}
-	return (len);
-}
-
 void			print_path(char *path)
 {
 	if (path)
@@ -44,6 +22,18 @@ void			print_path(char *path)
 		ft_putstr(path);
 		ft_putstr(":\n");
 	}
+}
+
+int				check_next(t_list *list, int size)
+{
+	t_file file;
+
+	if (!list)
+		return (-1);
+	file = *((t_file*)list->content);
+	if (*(file.name) == '.' && !(*(file.name + 1)))
+		return (-2);
+	return (size);
 }
 
 void			print_name(t_file *file, int size)
@@ -72,16 +62,125 @@ void			print_name(t_file *file, int size)
 	}
 }
 
-int				check_next(t_list *list, int size)
+int		get_max_name_length(t_list *files)
+{
+	int		len;
+	t_file	file;
+
+	len = 0;
+	while (files)
+	{
+		file = *((t_file*)files->content);
+		if ((int)ft_strlen(file.name) > len)
+			len = ft_strlen(file.name);
+		files = files->next;
+		if (g_multiarg && files)
+		{
+			file = *((t_file*)files->content);
+			if (*(file.name) == '.' && !(*(file.name + 1)))
+				break ;
+		}
+	}
+	return (len);
+}
+
+int			get_term_colsize(void)
+{
+	struct winsize w;
+
+	ft_bzero((void *)&w, sizeof(w));
+	if (ioctl(0, TIOCGWINSZ, &w) == -1)
+		ft_printf("Error while retrieving terminal informations");
+	return (w.ws_col);
+}
+
+int					get_col(t_list *files)
+{
+	int		nbfile;
+	int		fileperline;
+	t_file	file;
+
+	fileperline = get_term_colsize() / (get_max_name_length(files) + 1);
+	nbfile = 0;
+	while (files)
+	{
+		file = *((t_file *)files->content);
+		if (*(file.name) != '.' || (g_flags & F_DOT))
+			nbfile++;
+		files = files->next;
+		if (g_multiarg && files)
+		{
+			file = *((t_file *)files->content);
+			if (*(file.name) == '.' && !(*(file.name + 1)))
+				break ;
+		}
+	}
+	return ((nbfile / fileperline) + (nbfile % fileperline != 0 ? 1 : 0));
+}
+
+void 	print_list(t_list *files)
 {
 	t_file file;
 
-	if (!list)
-		return (-1);
-	file = *((t_file*)list->content);
-	if (*(file.name) == '.' && !(*(file.name + 1)))
-		return (-2);
-	return (size);
+	printf("====================================================\n");
+	while (files)
+	{
+		file = *((t_file *)files->content);
+		printf("files.id %d -> %s\n", file.id, file.full_path);
+		files = files->next;
+	}
+	printf("====================================================\n");
+}
+
+static void		simple_print_col(t_list *head)
+{
+	size_t	size;
+	t_file	file;
+	int		i;
+	int		col;
+	int		mod;
+	t_list	*files;
+	int		id;
+
+	if (!head)
+		return ;
+	size = get_max_name_length(head) + 1;
+	col = get_col(head);
+	mod = 0;
+	if (g_multiarg)
+		print_path(((t_file *)head->content)->path);
+	id = ((t_file *)head->content)->id;
+	while (mod < col)
+	{
+		i = 0;
+		files = head;
+		while (files)
+		{
+			file = *((t_file*)files->content);
+			if (i % col == mod)
+			{
+				// printf("file,id %d : file.name %s\n", file.id, file.name);
+				if (size < file.size)
+					size = file.size + 1;
+				if (*(file.name) != '.' || (g_flags & F_DOT))
+					print_name(&file, size);
+			}
+			if (*(file.name) != '.' || (g_flags & F_DOT))
+				i++;
+			files = files->next;
+			if (files && ((t_file *)files->content)->id != id)
+				break ;
+		}
+		mod++;
+		if (mod < col)
+			ft_putchar('\n');
+	}
+	ft_putchar('\n');
+	if (files)
+	{
+		ft_putchar('\n');
+		simple_print_col(files);
+	}
 }
 
 static void		simple_print(t_list *files)
@@ -153,12 +252,12 @@ void		list_insert(t_list **head, t_list **tail, t_list *needle)
 		*tail = *head;
 		return ;
 	}
-	if (ft_strcmp(((t_file *)(*head)->content)->full_path, ((t_file *)needle->content)->full_path) > 0)
+	if (ft_strcmp(((t_file *)(*head)->content)->full_path, ((t_file *)needle->content)->full_path) >= 0)
 	{
 		ft_lstadd(head, needle);
 		return ;
 	}
-	if (ft_strcmp(((t_file *)(*tail)->content)->full_path, ((t_file *)needle->content)->full_path) < 0)
+	if (ft_strcmp(((t_file *)(*tail)->content)->full_path, ((t_file *)needle->content)->full_path) <= 0)
 	{
 		(*tail)->next = needle;
 		*tail = needle;
@@ -168,7 +267,7 @@ void		list_insert(t_list **head, t_list **tail, t_list *needle)
 	prev = *head;
 	while (curr)
 	{
-		if (ft_strcmp(((t_file *)(curr)->content)->full_path, ((t_file *)needle->content)->full_path) > 0)
+		if (ft_strcmp(((t_file *)(curr)->content)->full_path, ((t_file *)needle->content)->full_path) >= 0)
 		{
 			prev->next = needle;
 			needle->next = curr;
@@ -234,7 +333,7 @@ t_file			create_file(char *name, char *path)
 	return (file);
 }
 
-void		list_dir(DIR *dir, t_list **head, t_list **tail, char *path)
+void		list_dir(DIR *dir, t_list **head, t_list **tail, char *path, int i)
 {
 	t_dirent	*d;
 	t_list		*list;
@@ -245,6 +344,7 @@ void		list_dir(DIR *dir, t_list **head, t_list **tail, char *path)
 	{
 		file = create_file(d->d_name, path);
 		file.size = ft_strlen(d->d_name);
+		file.id = i;
 		list = ft_lstnew((void *)&file, sizeof(t_file));
 		list == NULL ? exit(1) : 0;
 		list_insert(head, tail, list);
@@ -443,13 +543,13 @@ static	void		ft_ls(int argc, char **names)
 		if (!dir)
 			handle_notdir(names[i], &fiflnks);
 		else
-			list_dir(dir, &head, &tail, names[i]);
+			list_dir(dir, &head, &tail, names[i], i);
 		i++;
 	}
 	ft_lstrev(&fiflnks);
 	handle_fiflnks(fiflnks, head);
 	if (!g_flags || (~g_flags & F_LIST))
-		simple_print(head);
+		simple_print_col(head);
 	else
 		print_full_info(head);
 }
@@ -480,18 +580,8 @@ static	int		sort_args(int argc, char **argv)
 	return (1);
 }
 
-void    get_term_info(void)
-{
-	struct winsize w;
-
-	if (ioctl(0, TIOCGWINSZ, &w) == -1)
-		ft_printf("Error while retrieving terminal informations");
-	printf("col: %d|\n row: %d\n", w.ws_col, w.ws_row);
-}
-
 int					main(int argc, char **argv)
 {
-	//get_term_info();
 	set_lsflags(argc, argv);
 	(g_flags > 0) && (argv++);
 	argc = argc - (g_flags > 0);
