@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:27:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/06 18:28:54 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/06 18:41:16 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,21 +79,25 @@ long long	get_totalsize(t_list *files)
 	return (size);
 }
 
-char        get_extended(t_file file)
+char		get_extended(t_file file)
 {
-    ssize_t attr;
+	ssize_t attr;
+	acl_t acl;
+	acl_entry_t dummy;
 
-    attr = 0;
-    attr = listxattr(ft_strjoin(file.path, file.name), NULL, 0, XATTR_NOFOLLOW);
-    //attr = ft_max(0, attr);
-    ft_printf("attr: %d|%s\n", attr, file.name);
-    if (attr > 0)
-        return ('@');//ft_printf("|%s|@ xd\n", ft_strjoin(file.path, file.name));
-    else if (attr == 12245)
-        return ('+');
-    else
-        return (' ');
-    return ('@');
+	attr = 0;
+	acl = NULL;
+	attr = listxattr(ft_strjoin(file.path, file.name), NULL, 0, XATTR_NOFOLLOW);
+	acl = acl_get_link_np(ft_strjoin(file.path, file.name), ACL_TYPE_EXTENDED);
+	if (acl && acl_get_entry(acl, ACL_FIRST_ENTRY, &dummy) == -1)
+	{
+		acl_free(acl);
+		acl = NULL;
+	}
+	if (attr > 0 || acl)
+		return (attr > 0 ? '@' : '+');
+	else
+		return (' ');
 }
 
 int			get_term_colsize(void)
