@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/04 13:56:36 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/05 20:09:07 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/06 12:31:46 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,5 +147,8 @@ void			ft_splitdel(char **split);
 char			*ft_strcjoin(char const *s1, char const *s2, char c);
 int				ft_indexof(char *str, char c);
 void			ft_lstdelcurr(t_list *prev, t_list *curr, t_list **head);
+int				ft_max(int n, int nn);
+int				ft_min(int n, int nn);
+int				ft_intlen_base(uintmax_t nbr, int base);
 
 #endif
