@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:31:17 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/06 12:50:53 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/06 14:14:33 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@
 # define ANSI_CYAN			"\x1b[1m\x1b[36m"
 # define ANSI_RESET			"\x1b[0m"
 # define ANSI_PURPLE		"\x1b[35m"
-# define ISEXEC(m)			(((m) & S_IXUSR) == S_IXUSR)
 # define MAX_PATH_LEN		4096
+# define COLOR				0
 
 t_list						*g_files;
 extern char					g_flags;
@@ -64,7 +64,7 @@ typedef struct				s_file
 	char					printed;
 	int						id;
 }							t_file;
-void						print_link(t_file *file);
+int							print_link(t_file *file);
 int							check_next(t_list *list, int size);
 int							get_max_name_length(t_list *files);
 int							get_col(t_list *files);
@@ -77,14 +77,15 @@ void						set_max_length(t_list *files, int len[4]);
 char						third_permission(int m, char type_user);
 void						cat_fullpath(t_file *file, char *name, char *path);
 void						sort_list(t_list *list);
-void						list_insert(t_list **head, t_list **tail, t_list *needle);
-void						list_dir(DIR *d, t_list **h, t_list **t, char *p, int i);
+void						list_insert(t_list **h, t_list **t, t_list *n);
+void						list_dir(DIR *d, t_list **h, t_list **t, char *p,
+		int i);
 void						print_name(t_file *file, int size);
 void						print_full_info(t_list *files);
 void						simple_print_col(t_list *head);
 void						simple_print(t_list *files);
-void						print_path(char *path);
+int							print_path(char *path);
 void						print_flags(void);
-void 						print_list(t_list *files);
+void						print_list(t_list *files);
 t_file						create_file(char *name, char *path);
 #endif
