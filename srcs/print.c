@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:23:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/06 17:07:36 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/06 19:22:26 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void		print_full_info(t_list *files)
 		if (*(file.name) == '.' && !(*(file.name + 1)))
 		{
 			g_multiarg && print_path(file.path);
-			ft_printf("%total %lld\n", get_totalsize(files));
+			ft_printf("total %lld\n", get_totalsize(files));
 		}
 		if (*(file.name) != '.' || (g_flags & F_DOT))
 		{
@@ -95,8 +95,7 @@ void		simple_print_col(t_list *head)
 	size = get_max_name_length(head) + 1;
 	col = get_col(head);
 	mod = 0;
-	if (g_multiarg)
-		print_path(((t_file *)head->content)->path);
+	(g_multiarg) && print_path(((t_file *)head->content)->path);
 	id = ((t_file *)head->content)->id;
 	while (mod < col)
 	{
@@ -107,20 +106,16 @@ void		simple_print_col(t_list *head)
 			file = *((t_file*)files->content);
 			if (i % col == mod)
 			{
-				// printf("file,id %d : file.name %s\n", file.id, file.name);
-				if (size < file.size)
-					size = file.size + 1;
+				(size < file.size) && (size = file.size + 1);
 				if (*(file.name) != '.' || (g_flags & F_DOT))
 					print_name(&file, size);
 			}
-			if (*(file.name) != '.' || (g_flags & F_DOT))
-				i++;
+			(*(file.name) != '.' || (g_flags & F_DOT)) && i++;
 			files = files->next;
 			if (files && ((t_file *)files->content)->id != id)
 				break ;
 		}
-		mod++;
-		if (mod < col)
+		if (++mod < col)
 			ft_putchar('\n');
 	}
 	ft_putchar('\n');
@@ -162,5 +157,5 @@ int			print_path(char *path)
 		ft_putstr(path);
 		ft_putstr(":\n");
 	}
-	return (0);
+	return (1);
 }

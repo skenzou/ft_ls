@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/06 18:20:05 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/06 19:46:12 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,33 +15,33 @@
 char g_flags = 0;
 char g_multiarg = 0;
 
-void			print_flags(void)
-{
-	(g_flags & F_LIST) && (ft_printf("g_flags: F_LIST\n"));
-	(g_flags & F_RECURSIVE) && (ft_printf("g_flags: F_RECURSIVE\n"));
-	(g_flags & F_DOT) && (ft_printf("g_flags: F_DOT\n"));
-	(g_flags & F_REVERSE) && (ft_printf("g_flags: F_REVERSE\n"));
-	(g_flags & F_SORT_TIME) && (ft_printf("g_flags: F_SORT TIME\n"));
-	(g_flags & F_LAST_ACCESS_TIME) && (ft_printf("g_flags: F_ACCESS TIME\n"));
-	(g_flags & F_SORT_OFF) && (ft_printf("g_flags: F_SORT OFF\n"));
-	(g_flags & F_COLOR) && (ft_printf("g_flags: F_COLOR\n"));
-}
+/*
+**void			print_flags(void)
+**{
+**	(g_flags & F_LIST) && (ft_printf("g_flags: F_LIST\n"));
+**	(g_flags & F_RECURSIVE) && (ft_printf("g_flags: F_RECURSIVE\n"));
+**	(g_flags & F_DOT) && (ft_printf("g_flags: F_DOT\n"));
+**	(g_flags & F_REVERSE) && (ft_printf("g_flags: F_REVERSE\n"));
+**	(g_flags & F_SORT_TIME) && (ft_printf("g_flags: F_SORT TIME\n"));
+**	(g_flags & F_LAST_ACCESS_TIME) && (ft_printf("g_flags: F_ACCESS TIME\n"));
+**	(g_flags & F_SORT_OFF) && (ft_printf("g_flags: F_SORT OFF\n"));
+**	(g_flags & F_COLOR) && (ft_printf("g_flags: F_COLOR\n"));
+**}
+**void 			print_list(t_list *files)
+**{
+**	t_file file;
+**	printf("====================================================\n");
+**	while (files)
+**	{
+**		file = *((t_file *)files->content);
+**		printf("files.id %d -> %s\n", file.id, file.full_path);
+**		files = files->next;
+**	}
+**	printf("====================================================\n");
+**}
+*/
 
-void 	print_list(t_list *files)
-{
-	t_file file;
-
-	printf("====================================================\n");
-	while (files)
-	{
-		file = *((t_file *)files->content);
-		printf("files.id %d -> %s\n", file.id, file.full_path);
-		files = files->next;
-	}
-	printf("====================================================\n");
-}
-
-static void			set_lsflags(int argc, char **argv)
+static void		set_lsflags(int argc, char **argv)
 {
 	int i;
 
@@ -72,22 +72,11 @@ t_file			create_file(char *name, char *path)
 	(S_ISFIFO(file.stats.st_mode)) && (file.perms[0] = 'p');
 	(S_ISLNK(file.stats.st_mode)) && (file.perms[0] = 'l');
 	(S_ISSOCK(file.stats.st_mode)) && (file.perms[0] = 's');
-	file.perms[0] || (file.perms[0] = '?');
-	file.perms[1] = "-r"[(file.stats.st_mode & S_IRUSR) > 0];
-	file.perms[2] = "-w"[(file.stats.st_mode & S_IWUSR) > 0];
-	file.perms[3] = third_permission(file.stats.st_mode, 'u');
-	file.perms[4] = "-r"[(file.stats.st_mode & S_IRGRP) > 0];
-	file.perms[5] = "-w"[(file.stats.st_mode & S_IWGRP) > 0];
-	file.perms[6] = third_permission(file.stats.st_mode, 'g');
-	file.perms[7] = "-r"[(file.stats.st_mode & S_IROTH) > 0];
-	file.perms[8] = "-w"[(file.stats.st_mode & S_IWOTH) > 0];
-	file.perms[9] = third_permission(file.stats.st_mode, 'o');
-	file.perms[10] = get_extended(file);
-	file.perms[11] = '\0';
+	set_perms(&file);
 	return (file);
 }
 
-static	void		ft_ls(int argc, char **names)
+static	void	ft_ls(int argc, char **names)
 {
 	DIR			*dir;
 	t_list		*head;
@@ -143,7 +132,7 @@ static	int		sort_args(int argc, char **argv)
 	return (1);
 }
 
-int					main(int argc, char **argv)
+int				main(int argc, char **argv)
 {
 	set_lsflags(argc, argv);
 	(g_flags > 0) && (argv++);

@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:31:17 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/06 18:31:54 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/06 19:46:17 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # include <time.h>
 # include <sys/ioctl.h>
 # include <sys/xattr.h>
-#include <sys/acl.h>
+# include <sys/acl.h>
 # define LSFLAGS			"lRarftuG"
 # define F_LIST				(1 << 0)
 # define F_RECURSIVE		(1 << 1)
@@ -85,13 +85,14 @@ int							print_path(char *path);
 */
 int							print_link(t_file *file);
 int							check_next(t_list *list, int size);
+void						set_perms(t_file *file);
 /*
 ** GETERS.C
 */
 int							get_max_name_length(t_list *files);
 int							get_col(t_list *files);
 long long					get_totalsize(t_list *files);
-char						get_extended(t_file file);
+char						get_extended(t_file *file);
 int							get_term_colsize(void);
 /*
 ** HANDLERS.C
