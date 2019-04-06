@@ -6,13 +6,13 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:38:49 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/06 12:48:50 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/06 14:14:59 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void		print_link(t_file *file)
+int		print_link(t_file *file)
 {
 	char	buff[MAX_PATH_LEN];
 
@@ -21,9 +21,10 @@ void		print_link(t_file *file)
 		ft_printf(" -> %s", buff);
 	else
 		exit(1);
+	return (0);
 }
 
-int				check_next(t_list *list, int size)
+int		check_next(t_list *list, int size)
 {
 	t_file file;
 

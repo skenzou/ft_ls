@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:23:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/06 12:45:40 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/06 14:15:00 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,7 @@ void		print_full_info(t_list *files)
 		file = *((t_file *)files->content);
 		if (*(file.name) == '.' && !(*(file.name + 1)))
 		{
-			if (g_multiarg)
-				print_path(file.path);
+			g_multiarg && print_path(file.path);
 			ft_printf("%total %lld\n", get_totalsize(files));
 		}
 		if (*(file.name) != '.' || (g_flags & F_DOT))
@@ -61,8 +60,7 @@ void		print_full_info(t_list *files)
 			getgrgid(file.stats.st_gid)->gr_name, length[1], file.stats.st_size,
 			ctime(&file.stats.st_mtimespec.tv_sec) + 4);
 			print_name(&file, check_next(files->next, 0));
-			if (S_ISLNK(file.stats.st_mode))
-				print_link(&file);
+			(S_ISLNK(file.stats.st_mode)) && print_link(&file);
 			ft_putchar('\n');
 		}
 		files = files->next;
@@ -120,7 +118,6 @@ void		simple_print_col(t_list *head)
 	}
 }
 
-
 void		simple_print(t_list *files)
 {
 	size_t	size;
@@ -145,11 +142,12 @@ void		simple_print(t_list *files)
 	}
 }
 
-void			print_path(char *path)
+int			print_path(char *path)
 {
 	if (path)
 	{
 		ft_putstr(path);
 		ft_putstr(":\n");
 	}
+	return (0);
 }
