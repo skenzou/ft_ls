@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:27:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/06 19:46:15 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/07 02:04:09 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,12 @@ int			get_max_name_length(t_list *files)
 	len = 0;
 	while (files)
 	{
-		file = *((t_file*)files->content);
-		if ((int)ft_strlen(file.name) > len)
-			len = ft_strlen(file.name);
+		file = *((t_file *)files->content);
+		len = ft_max(ft_strlen(file.name), len);
 		files = files->next;
 		if (g_multiarg && files)
 		{
-			file = *((t_file*)files->content);
+			file = *((t_file *)files->content);
 			if (*(file.name) == '.' && !(*(file.name + 1)))
 				break ;
 		}
