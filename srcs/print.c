@@ -6,27 +6,11 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:23:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/08 20:35:05 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/09 01:46:28 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
-
-static void		print_newline(int size)
-{
-	if (g_flags & F_LIST)
-	{
-		if (size == -2)
-			ft_putchar('\n');
-	}
-	else
-	{
-		if (size == -2)
-			ft_putstr("\n\n");
-		if (size == -1)
-			ft_putchar('\n');
-	}
-}
 
 static void		print_name(t_file *file, int size)
 {
@@ -51,12 +35,42 @@ static void		print_name(t_file *file, int size)
 	print_newline(size);
 }
 
+static void		print_full_info_name(t_file file, int length[6],
+														t_list *files)
+{
+	if (S_ISCHR(file.stats.st_mode) || S_ISBLK(file.stats.st_mode))
+	{
+		ft_printf("%s %*hu %-*s  %-*s %*d, %*d %.12s ", file.perms,
+		length[0], file.stats.st_nlink, length[2],
+		getpwuid(file.stats.st_uid)->pw_name, length[3],
+		getgrgid(file.stats.st_gid)->gr_name,
+		length[4], major(file.stats.st_rdev),
+		length[5], minor(file.stats.st_rdev),
+		ctime(&file.stats.st_mtimespec.tv_sec) + 4);
+		print_name(&file, check_next(files->next, 0, file.id));
+		(S_ISLNK(file.stats.st_mode)) && print_link(&file);
+	}
+	else
+	{
+		ft_printf("%s %*hu %-*s  %-*s  %*lld %.12s ", file.perms,
+		length[0], file.stats.st_nlink, length[2],
+		getpwuid(file.stats.st_uid)->pw_name, length[3],
+		getgrgid(file.stats.st_gid)->gr_name, length[1],
+		file.stats.st_size,
+		ctime(&file.stats.st_mtimespec.tv_sec) + 4);
+		print_name(&file, check_next(files->next, 0, file.id));
+		(S_ISLNK(file.stats.st_mode)) && print_link(&file);
+	}
+	ft_putchar('\n');
+}
+
 void			print_full_info(t_list *files)
 {
 	t_file	file;
-	int		length[4];
+	int		length[6];
 	int		id;
 
+	ft_bzero((void **)&length, sizeof(length));
 	set_max_length(files, length);
 	files && (id = ((t_file *)files->content)->id);
 	(files && id != -1) && print_head(((t_file *)files->content)->path, files);
@@ -66,21 +80,13 @@ void			print_full_info(t_list *files)
 		if (file.id != id && ((id = file.id) || 1))
 			print_head(((t_file *)files->content)->path, files);
 		if (*(file.name) != '.' || (g_flags & F_DOT))
-		{
-			ft_printf("%s %*hu %-*s %-*s %*lld %.12s ", file.perms, length[0],
-			file.stats.st_nlink, length[2] + 1,
-			getpwuid(file.stats.st_uid)->pw_name, length[3] + 1,
-			getgrgid(file.stats.st_gid)->gr_name, length[1], file.stats.st_size,
-			ctime(&file.stats.st_mtimespec.tv_sec) + 4);
-			print_name(&file, check_next(files->next, 0, file.id));
-			(S_ISLNK(file.stats.st_mode)) && print_link(&file);
-			ft_putchar('\n');
-		}
+			print_full_info_name(file, length, files);
 		files = files->next;
 	}
 }
 
-static t_list	*simple_print_loop(t_list *head, size_t size, int col, int id)
+static t_list	*simple_print_loop(t_list *head, size_t size,
+													int col, int id)
 {
 	int			mod;
 	t_list		*files;

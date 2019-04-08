@@ -1,26 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_intlen_base.c                                   :+:      :+:    :+:   */
+/*   print2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/04/06 12:31:04 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/09 01:22:08 by midrissi         ###   ########.fr       */
+/*   Created: 2019/04/09 01:44:57 by midrissi          #+#    #+#             */
+/*   Updated: 2019/04/09 01:45:49 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "ft_ls.h"
 
-int			ft_intlen_base(uintmax_t nbr, int base)
+void		print_newline(int size)
 {
-	int digits;
-
-	digits = 1;
-	while (nbr / base)
+	if (g_flags & F_LIST)
 	{
-		digits++;
-		nbr /= base;
+		if (size == -2)
+			ft_putchar('\n');
 	}
-	return (digits);
+	else
+	{
+		if (size == -2)
+			ft_putstr("\n\n");
+		if (size == -1)
+			ft_putchar('\n');
+	}
 }

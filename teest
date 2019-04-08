@@ -1,0 +1,32 @@
+total 1517
+lrwxr-xr-x@    1 root  wheel             11 May 10  2018 var -> private/var
+drwxr-xr-x@   10 root  wheel            340 May 10  2018 usr
+lrwxr-xr-x@    1 root  wheel             11 May 10  2018 tmp -> private/tmp
+drwxr-xr-x@   63 root  wheel           2142 May 10  2018 sbin
+drwxr-xr-x@    6 root  wheel            204 May 10  2018 private
+dr-xr-xr-x     2 root  wheel              1 Apr  8 19:38 net
+-rw-r--r--@    1 root  wheel            313 Dec 22  2016 installer.failurerequests
+dr-xr-xr-x     2 root  wheel              1 Apr  8 19:38 home
+drwxrwxrwt     2 root  wheel             68 May 10  2018 goinfre
+drwx------    20 exam  applications     680 Mar 13 12:25 exam
+lrwxr-xr-x@    1 root  wheel             11 May 10  2018 etc -> private/etc
+dr-xr-xr-x     3 root  wheel           4358 Apr  8 19:05 dev
+drwxrwxr-t@    2 root  admin             68 Feb 21  2017 cores
+drwxr-xr-x@   39 root  wheel           1326 May 10  2018 bin
+drwxr-xr-x@    4 root  wheel            136 Apr  8 19:05 Volumes
+drwxr-xr-x    46 root  admin           1564 Apr  8 13:43 Users
+drwxr-xr-x@    4 root  wheel            136 May 10  2018 System
+drwxr-xr-x@    2 root  wheel             68 Feb 21  2017 Network
+drwxr-xr-x+   60 root  wheel           2040 May 10  2018 Library
+drwxrwxr-x+   49 root  admin           1666 Oct 15 15:32 Applications
+drwxr-xr-x@    2 root  wheel             68 Feb 21  2017 .vol
+-rw-------     1 root  wheel         753664 May 10  2018 .hotfiles.btree
+drwx------  1394 root  wheel          47396 Apr  8 19:34 .fseventsd
+----------     1 root  admin              0 Feb 21  2017 .file
+d-wx-wx-wt    29 root  wheel            986 Apr  8 19:33 .Trashes
+drwx------     5 root  wheel            170 Oct  2  2018 .Spotlight-V100
+drwxr-xr-x@    3 root  wheel            102 Oct 15 20:40 .PKInstallSandboxManager-SystemSoftware
+d--x--x--x     8 root  wheel            272 Apr  8 19:05 .DocumentRevisions-V100
+-rw-rw-r--     1 root  admin              0 Feb 21  2017 .DS_Store
+drwxr-xr-x    33 root  wheel           1190 Mar 13 10:19 ..
+drwxr-xr-x    33 root  wheel           1190 Mar 13 10:19 .

@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:34:48 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/08 20:34:52 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/09 01:41:02 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,14 +62,14 @@ void		handle_fiflnks(t_list *fiflnks, t_list *head)
 	}
 }
 
-void		set_max_length(t_list *files, int len[4])
+void		set_max_length(t_list *files, int len[6])
 {
 	t_file	f;
+	char	boolean;
 
-	len[0] = 0;
-	len[1] = 0;
-	len[2] = 0;
-	len[3] = 0;
+	len[4] = 3;
+	len[5] = 3;
+	boolean = 0;
 	while (files)
 	{
 		f = *((t_file *)files->content);
@@ -77,8 +77,16 @@ void		set_max_length(t_list *files, int len[4])
 		len[1] = ft_max(len[1], ft_intlen_base(f.stats.st_size, 10));
 		len[2] = ft_max(len[2], ft_strlen(getpwuid(f.stats.st_uid)->pw_name));
 		len[3] = ft_max(len[3], ft_strlen(getgrgid(f.stats.st_gid)->gr_name));
+		if (S_ISCHR(f.stats.st_mode) || S_ISBLK(f.stats.st_mode))
+		{
+			boolean = 1;
+			len[4] = ft_max(ft_intlen_base(major(f.stats.st_rdev), 10), len[4]);
+			len[5] = ft_max(ft_intlen_base(minor(f.stats.st_rdev), 10), len[5]);
+		}
 		files = files->next;
 	}
+	boolean && (len[1] = ft_max(len[1], (len[4] + len[5] + 2)));
+	len[4] = ft_max(len[1] - len[5] - 1, len[4]);
 }
 
 char		third_permission(int m, char type_user)

@@ -6,7 +6,7 @@
 #    By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/03 09:24:41 by midrissi          #+#    #+#              #
-#    Updated: 2019/04/07 00:56:09 by midrissi         ###   ########.fr        #
+#    Updated: 2019/04/09 01:47:15 by midrissi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,7 +39,7 @@ MSG				=	Compiling ft_ls
 NAME = ft_ls
 cc = gcc
 C_FLAGS = -Wall -Wextra -Werror
-SRC_NAME = main.c print.c utils.c list.c handlers.c geters.c
+SRC_NAME = main.c print.c utils.c list.c handlers.c geters.c print2.c
 OBJ_PATH = ./obj/
 LFT_PATH = ./libft/
 INC_PATH = ./includes
