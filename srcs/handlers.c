@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:34:48 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/07 02:02:10 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/08 20:34:52 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void		handle_notdir(char *name, t_list **fiflnks)
 
 	ft_bzero((void *)&file, sizeof(t_file));
 	file = create_file(name, NULL);
+	file.id = -1;
 	if (S_ISFIFO(file.stats.st_mode) || S_ISLNK(file.stats.st_mode) ||
 		S_ISREG(file.stats.st_mode) || S_ISBLK(file.stats.st_mode) ||
 		S_ISCHR(file.stats.st_mode) || S_ISSOCK(file.stats.st_mode))
