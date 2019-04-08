@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:23:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/09 01:46:28 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/09 01:53:25 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,14 @@ static void		print_name(t_file *file, int size)
 	print_newline(size);
 }
 
-static void		print_full_info_name(t_file file, int length[6],
-														t_list *files)
+static void		print_full_info_name(t_file file, int length[6], t_list *files)
 {
 	if (S_ISCHR(file.stats.st_mode) || S_ISBLK(file.stats.st_mode))
 	{
 		ft_printf("%s %*hu %-*s  %-*s %*d, %*d %.12s ", file.perms,
-		length[0], file.stats.st_nlink, length[2],
-		getpwuid(file.stats.st_uid)->pw_name, length[3],
-		getgrgid(file.stats.st_gid)->gr_name,
+		length[0], file.stats.st_nlink,
+		length[2], getpwuid(file.stats.st_uid)->pw_name,
+		length[3], getgrgid(file.stats.st_gid)->gr_name,
 		length[4], major(file.stats.st_rdev),
 		length[5], minor(file.stats.st_rdev),
 		ctime(&file.stats.st_mtimespec.tv_sec) + 4);
@@ -53,10 +52,10 @@ static void		print_full_info_name(t_file file, int length[6],
 	else
 	{
 		ft_printf("%s %*hu %-*s  %-*s  %*lld %.12s ", file.perms,
-		length[0], file.stats.st_nlink, length[2],
-		getpwuid(file.stats.st_uid)->pw_name, length[3],
-		getgrgid(file.stats.st_gid)->gr_name, length[1],
-		file.stats.st_size,
+		length[0], file.stats.st_nlink,
+		length[2], getpwuid(file.stats.st_uid)->pw_name,
+		length[3], getgrgid(file.stats.st_gid)->gr_name,
+		length[1], file.stats.st_size,
 		ctime(&file.stats.st_mtimespec.tv_sec) + 4);
 		print_name(&file, check_next(files->next, 0, file.id));
 		(S_ISLNK(file.stats.st_mode)) && print_link(&file);
@@ -85,8 +84,7 @@ void			print_full_info(t_list *files)
 	}
 }
 
-static t_list	*simple_print_loop(t_list *head, size_t size,
-													int col, int id)
+static t_list	*simple_print_loop(t_list *head, size_t size, int col, int id)
 {
 	int			mod;
 	t_list		*files;
