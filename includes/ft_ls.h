@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:31:17 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/07 03:48:21 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/08 20:13:08 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ void						simple_print_col(t_list *head);
 ** UTILS.C
 */
 int							print_link(t_file *file);
-int							check_next(t_list *list, int size);
-int							print_path(char *path);
+int							check_next(t_list *list, int size, int id);
+int							print_header(char *path, t_list *files);
 t_file						create_file(char *name, char *path);
 /*
 ** GETERS.C

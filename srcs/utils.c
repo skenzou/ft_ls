@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:38:49 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/07 02:02:55 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/08 20:16:04 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,25 +24,27 @@ int				print_link(t_file *file)
 	return (0);
 }
 
-int				check_next(t_list *list, int size)
+int				check_next(t_list *list, int size, int id)
 {
 	t_file file;
 
 	if (!list)
 		return (-1);
 	file = *((t_file*)list->content);
-	if (*(file.name) == '.' && !(*(file.name + 1)))
+	if (id != file.id)
 		return (-2);
 	return (size);
 }
 
-int				print_path(char *path)
+int				print_header(char *path, t_list *files)
 {
-	if (path)
+	if (g_multiarg && path)
 	{
 		ft_putstr(path);
 		ft_putstr(":\n");
 	}
+	if (files)
+		ft_printf("total %lld\n", get_totalsize(files));
 	return (1);
 }
 

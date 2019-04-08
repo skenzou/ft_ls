@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:23:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/07 02:03:07 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/08 20:18:16 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,16 +55,16 @@ void			print_full_info(t_list *files)
 {
 	t_file	file;
 	int		length[4];
+	int		id;
 
 	set_max_length(files, length);
+	id = ((t_file *)files->content)->id;
+	print_header(((t_file *)files->content)->path, files);
 	while (files)
 	{
 		file = *((t_file *)files->content);
-		if (*(file.name) == '.' && !(*(file.name + 1)))
-		{
-			g_multiarg && print_path(file.path);
-			ft_printf("total %lld\n", get_totalsize(files));
-		}
+		if (file.id != id && ((id = file.id) || 1))
+			print_header(((t_file *)files->content)->path, files);
 		if (*(file.name) != '.' || (g_flags & F_DOT))
 		{
 			ft_printf("%s %*hu %-*s %-*s %*lld %.12s ", file.perms, length[0],
@@ -72,7 +72,7 @@ void			print_full_info(t_list *files)
 			getpwuid(file.stats.st_uid)->pw_name, length[3] + 1,
 			getgrgid(file.stats.st_gid)->gr_name, length[1], file.stats.st_size,
 			ctime(&file.stats.st_mtimespec.tv_sec) + 4);
-			print_name(&file, check_next(files->next, 0));
+			print_name(&file, check_next(files->next, 0, file.id));
 			(S_ISLNK(file.stats.st_mode)) && print_link(&file);
 			ft_putchar('\n');
 		}
@@ -120,8 +120,7 @@ void			simple_print_col(t_list *head)
 	size = get_max_name_length(head) + 1;
 	col = get_col(head);
 	id = ((t_file *)head->content)->id;
-	if (g_multiarg)
-		print_path(((t_file *)head->content)->path);
+	print_header(((t_file *)head->content)->path, NULL);
 	if ((head = simple_print_loop(head, size, col, id)))
 	{
 		ft_putendl("\n");
