@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:31:17 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/09 02:31:29 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/09 03:12:37 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,16 @@ void						cat_fullpath(t_file *file, char *name, char *path);
 */
 void						list_dir(DIR *dir, t_list **head, t_list **tail,
 																	char *path);
-int							list_insert_loop(t_list **head, t_list *needle,
+int							insert_asc_loop(t_list **head, t_list *needle,
+																char reverse);
+/*
+** LIST2.C
+*/
+int							insert_time(t_list **head, t_list **tail,
+													t_list *needle, int ret);
+int							insert_time_r(t_list **head, t_list **tail,
+													t_list *needle, int ret);
+int							insert_time_loop(t_list **head, t_list *needle,
 																char reverse);
 /*
 ** MAIN.C

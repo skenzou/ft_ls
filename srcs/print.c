@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:23:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/09 02:16:03 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/09 04:44:14 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,16 @@ static void		print_full_info_name(t_file file, int length[6], t_list *files)
 {
 	if (S_ISCHR(file.stats.st_mode) || S_ISBLK(file.stats.st_mode))
 	{
-		ft_printf("%s %*hu %-*s  %-*s %*d, %*d %.12s ", file.perms,
+		ft_printf("%s %*hu %-*s  %-*s %*d, %*d", file.perms,
 		length[0], file.stats.st_nlink,
 		length[2], getpwuid(file.stats.st_uid)->pw_name,
 		length[3], getgrgid(file.stats.st_gid)->gr_name,
 		length[4], major(file.stats.st_rdev),
 		length[5], minor(file.stats.st_rdev));
 		print_time(&file);
-		print_name(&file, check_next(files->next, 0, file.id));
+		print_name(&file, 0);
 		(S_ISLNK(file.stats.st_mode)) && print_link(&file);
+		print_newline(check_next(files->next, 0, file.id));
 	}
 	else
 	{
@@ -57,10 +58,10 @@ static void		print_full_info_name(t_file file, int length[6], t_list *files)
 		length[3], getgrgid(file.stats.st_gid)->gr_name,
 		length[1], file.stats.st_size);
 		print_time(&file);
-		print_name(&file, check_next(files->next, 0, file.id));
+		print_name(&file, 0);
 		(S_ISLNK(file.stats.st_mode)) && print_link(&file);
+		print_newline(check_next(files->next, 0, file.id));
 	}
-	ft_putchar('\n');
 }
 
 void			print_full_info(t_list *files)
@@ -79,7 +80,10 @@ void			print_full_info(t_list *files)
 		if (file.id != id && ((id = file.id) || 1))
 			print_head(((t_file *)files->content)->path, files);
 		if (*(file.name) != '.' || (g_flags & F_DOT))
+		{
 			print_full_info_name(file, length, files);
+			ft_putchar('\n');
+		}
 		files = files->next;
 	}
 }

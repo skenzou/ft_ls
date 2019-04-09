@@ -6,13 +6,13 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:32:19 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/07 03:48:55 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/09 03:12:46 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-static int	list_insert_id(t_list *curr, t_list *needle, char reverse)
+static int	insert_asc_id(t_list *curr, t_list *needle, char reverse)
 {
 	int		id;
 
@@ -21,7 +21,7 @@ static int	list_insert_id(t_list *curr, t_list *needle, char reverse)
 	{
 		if (curr->next && ((t_file *)(curr->next)->content)->id != id)
 		{
-			return (list_insert_loop(&curr, needle, reverse));
+			return (insert_asc_loop(&curr, needle, reverse));
 		}
 		if (!curr->next)
 			break ;
@@ -31,7 +31,7 @@ static int	list_insert_id(t_list *curr, t_list *needle, char reverse)
 	return (1);
 }
 
-int			list_insert_loop(t_list **head, t_list *needle, char reverse)
+int			insert_asc_loop(t_list **head, t_list *needle, char reverse)
 {
 	t_list	*curr;
 	t_list	*prev;
@@ -44,7 +44,7 @@ int			list_insert_loop(t_list **head, t_list *needle, char reverse)
 		ret = ft_strcmp(((t_file *)(curr)->content)->full_path,
 				((t_file *)needle->content)->full_path);
 		if (ret == 0)
-			return (list_insert_id(curr, needle, reverse));
+			return (insert_asc_id(curr, needle, reverse));
 		if ((!reverse && ret > 0) || (reverse && ret < 0))
 		{
 			prev->next = needle;
@@ -58,7 +58,7 @@ int			list_insert_loop(t_list **head, t_list *needle, char reverse)
 	return (1);
 }
 
-static int	list_insert_r(t_list **head, t_list **tail, t_list *needle, int ret)
+static int	insert_asc_r(t_list **head, t_list **tail, t_list *needle, int ret)
 {
 	if (!tail || !head || !needle)
 		return (1);
@@ -76,7 +76,7 @@ static int	list_insert_r(t_list **head, t_list **tail, t_list *needle, int ret)
 		return (1);
 	}
 	if (ret == 0)
-		return (list_insert_id(*head, needle, 1));
+		return (insert_asc_id(*head, needle, 1));
 	if (ft_strcmp(((t_file *)(*tail)->content)->full_path,
 		((t_file *)needle->content)->full_path) > 0)
 	{
@@ -84,10 +84,10 @@ static int	list_insert_r(t_list **head, t_list **tail, t_list *needle, int ret)
 		*tail = needle;
 		return (1);
 	}
-	return (list_insert_loop(head, needle, 1));
+	return (insert_asc_loop(head, needle, 1));
 }
 
-static int	list_insert(t_list **head, t_list **tail, t_list *needle, int ret)
+static int	insert_asc(t_list **head, t_list **tail, t_list *needle, int ret)
 {
 	if (!tail || !head || !needle)
 		return (0);
@@ -105,7 +105,7 @@ static int	list_insert(t_list **head, t_list **tail, t_list *needle, int ret)
 		return (1);
 	}
 	if (ret == 0)
-		return (list_insert_id(*head, needle, 0));
+		return (insert_asc_id(*head, needle, 0));
 	if (ft_strcmp(((t_file *)(*tail)->content)->full_path,
 		((t_file *)needle->content)->full_path) < 0)
 	{
@@ -113,7 +113,7 @@ static int	list_insert(t_list **head, t_list **tail, t_list *needle, int ret)
 		*tail = needle;
 		return (1);
 	}
-	return (list_insert_loop(head, needle, 0));
+	return (insert_asc_loop(head, needle, 0));
 }
 
 void		list_dir(DIR *dir, t_list **head, t_list **tail, char *path)
@@ -131,8 +131,12 @@ void		list_dir(DIR *dir, t_list **head, t_list **tail, char *path)
 		file.id = id;
 		list = ft_lstnew((void *)&file, sizeof(t_file));
 		list == NULL ? exit(1) : 0;
-		(g_flags & F_REVERSE) ? list_insert_r(head, tail, list, 1)
-								: list_insert(head, tail, list, 1);
+		if (g_flags & F_REVERSE)
+			(g_flags & F_LAST_ACCESS_TIME) ? insert_time_r(head, tail, list, 1)
+											: insert_asc_r(head, tail, list, 1);
+		else
+			(g_flags & F_LAST_ACCESS_TIME) ? insert_time(head, tail, list, 1)
+											: insert_asc(head, tail, list, 1);
 	}
 	id++;
 	closedir(dir);
