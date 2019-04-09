@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:27:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/09 04:44:47 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/09 08:50:14 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int			get_max_name_length(t_list *files)
 	{
 		file = *((t_file *)files->content);
 		if (*(file.name) != '.' || (g_flags & F_DOT))
-			len = ft_max(ft_strlen(file.name), len);
+			len = ft_max(file.size, len);
 		files = files->next;
 		if (g_multiarg && files)
 		{
@@ -62,8 +62,12 @@ long long	get_totalsize(t_list *files)
 {
 	long long		size;
 	t_file			file;
+	int				id;
 
+	if (!files)
+		return (0);
 	size = 0;
+	id = ((t_file*)files->content)->id;
 	while (files)
 	{
 		file = *((t_file*)files->content);
@@ -72,7 +76,7 @@ long long	get_totalsize(t_list *files)
 		if (g_multiarg && files)
 		{
 			file = *((t_file*)files->content);
-			if (*(file.name) == '.' && !(*(file.name + 1)))
+			if (file.id != id)
 				break ;
 		}
 	}

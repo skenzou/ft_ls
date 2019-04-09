@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/07 00:24:45 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/09 08:19:59 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,10 @@ static	void	ft_ls(int argc, char **names)
 {
 	DIR			*dir;
 	t_list		*head;
-	t_list		*tail;
 	t_list		*fiflnks;
 	int			i;
 
 	head = NULL;
-	tail = NULL;
 	fiflnks = NULL;
 	i = argc == 1 ? 0 : 1;
 	while (i < argc)
@@ -74,7 +72,7 @@ static	void	ft_ls(int argc, char **names)
 		if (!(dir = opendir(names[i])))
 			handle_notdir(names[i], &fiflnks);
 		else
-			list_dir(dir, &head, &tail, names[i]);
+			list_dir(dir, &head, names[i]);
 		i++;
 	}
 	if (!(g_flags & F_REVERSE))

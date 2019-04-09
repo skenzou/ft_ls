@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:23:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/09 04:44:14 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/09 08:48:59 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ static void		print_name(t_file *file, int size)
 		ft_printf(ANSI_GREEN "%-*s" ANSI_RESET, size, file->name);
 	else if (S_ISCHR(file->stats.st_mode))
 		ft_printf("\x1b[43m\x1b[34m%-s\x1b[0m%*s",
-								file->name, size - ft_strlen(file->name), "");
+								file->name, size - file->size, "");
 	else if (S_ISBLK(file->stats.st_mode))
 		ft_printf("\x1b[46m\x1b[34m%-s\x1b[0m%*s",
-								file->name, size - ft_strlen(file->name), "");
+								file->name, size - file->size, "");
 	else if ((((file->stats.st_mode) & S_IXUSR) == S_IXUSR))
 		ft_printf(ANSI_RED "%-*s" ANSI_RESET, size, file->name);
 	else
@@ -46,7 +46,7 @@ static void		print_full_info_name(t_file file, int length[6], t_list *files)
 		length[4], major(file.stats.st_rdev),
 		length[5], minor(file.stats.st_rdev));
 		print_time(&file);
-		print_name(&file, 0);
+		print_name(&file, file.size);
 		(S_ISLNK(file.stats.st_mode)) && print_link(&file);
 		print_newline(check_next(files->next, 0, file.id));
 	}
