@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:31:17 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/09 01:46:11 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/09 02:31:29 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@
 # define ANSI_IYELLOW		"\x1b[43m\x1b[34m"
 # define ANSI_IBLUE			"\x1b[46m\x1b[34m"
 # define MAX_PATH_LEN		4096
+# define SIX_MONTHS			15778476
 # define COLOR				0
 
 extern char					g_flags;
@@ -78,9 +79,10 @@ typedef struct				s_file
 void						print_full_info(t_list *files);
 void						simple_print_col(t_list *head);
 /*
-** PRINT.C
+** PRINT2.C
 */
 void						print_newline(int size);
+void						print_time(t_file *file);
 /*
 ** UTILS.C
 */
