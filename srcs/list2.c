@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 02:49:05 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/09 04:00:41 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/09 05:38:08 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,13 @@ int			insert_time_loop(t_list **head, t_list *needle, char reverse)
 	curr = (*head)->next;
 	prev = *head;
 	id = ((t_file *)(needle)->content)->id;
-	while (curr && id == ((t_file *)(needle)->content)->id)
+	while (curr && id == ((t_file *)(curr)->content)->id)
 	{
-		ret = ((t_file *)curr->content)->stats.st_mtimespec.tv_sec -
-					((t_file *)needle->content)->stats.st_mtimespec.tv_sec;
+		ret = ((t_file *)needle->content)->stats.st_mtimespec.tv_sec -
+				((t_file *)curr->content)->stats.st_mtimespec.tv_sec;
 		// if (ret == 0)
 		// 	return (insert_time_id(curr, needle, reverse));
-		if ((!reverse && ret <= 0) || (reverse && ret >= 0))
+		if ((!reverse && ret >= 0) || (reverse && ret <= 0))
 		{
 			prev->next = needle;
 			needle->next = curr;
@@ -58,7 +58,7 @@ int			insert_time_loop(t_list **head, t_list *needle, char reverse)
 	}
 	if (curr)
 	{
-		needle->next = prev->next;
+		needle->next = curr;
 		prev->next = needle;
 	}
 	else
@@ -109,17 +109,17 @@ int			insert_time(t_list **head, t_list **tail, t_list *needle, int ret)
 	ret = ((t_file *)(*head)->content)->stats.st_mtimespec.tv_sec -
 						((t_file *)needle->content)->stats.st_mtimespec.tv_sec;
 	id_d = ((t_file *)(*head)->content)->id - ((t_file *)needle->content)->id;
-	if (ret >= 0 && !id_d)
+	if (ret <= 0 && !id_d)
 	{
 		ft_lstadd(head, needle);
 		return (1);
 	}
-	if (((t_file *)(*tail)->content)->stats.st_mtimespec.tv_sec -
-	((t_file *)needle->content)->stats.st_mtimespec.tv_sec >= 0 && !id_d)
-	{
-		(*tail)->next = needle;
-		*tail = needle;
-		return (1);
-	}
+	// if (((t_file *)(*tail)->content)->stats.st_mtimespec.tv_sec -
+	// ((t_file *)needle->content)->stats.st_mtimespec.tv_sec >= 0 && !id_d)
+	// {
+	// 	(*tail)->next = needle;
+	// 	*tail = needle;
+	// 	return (1);
+	// }
 	return (insert_time_id(*head, needle, 0));
 }
