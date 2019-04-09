@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 01:44:57 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/09 02:31:07 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/09 02:38:39 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void		print_time(t_file *file)
 	time(&now);
 	diff = now - file->stats.st_mtimespec.tv_sec;
 	date = ctime(&file->stats.st_mtimespec.tv_sec);
+	date == NULL ? exit(1) : 0;
 	if (diff > SIX_MONTHS || diff < 0)
 		ft_printf(" %.7s %.4s ", date + 4, date + 20);
 	else
