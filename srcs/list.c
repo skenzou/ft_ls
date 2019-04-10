@@ -6,13 +6,13 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:32:19 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/09 09:47:03 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/10 02:32:14 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-int	insert_asc_id(t_list *curr, t_list *needle, char reverse)
+int			insert_asc_id(t_list *curr, t_list *needle, char reverse)
 {
 	int		id;
 
@@ -58,7 +58,7 @@ int			insert_asc_loop(t_list **head, t_list *needle, char reverse)
 	return (1);
 }
 
-int	insert_asc_r(t_list **head, t_list *needle, int ret)
+int			insert_asc_r(t_list **head, t_list *needle, int ret)
 {
 	if (!head || !needle)
 		return (1);
@@ -79,7 +79,7 @@ int	insert_asc_r(t_list **head, t_list *needle, int ret)
 	return (insert_asc_loop(head, needle, 1));
 }
 
-static int	insert_asc(t_list **head, t_list *needle, int ret)
+int			insert_asc(t_list **head, t_list *needle, int ret)
 {
 	if (!head || !needle)
 		return (0);

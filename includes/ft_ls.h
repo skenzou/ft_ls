@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:31:17 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/09 09:15:32 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/10 03:15:05 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ int							insert_asc_id(t_list *curr, t_list *needle,
 																char reverse);
 int							insert_asc_r(t_list **head, t_list *needle,
 																	int ret);
+int							insert_asc(t_list **head, t_list *needle, int ret);
 /*
 ** LIST2.C
 */
@@ -124,7 +125,7 @@ int							insert_time_r(t_list **head, t_list *needle,
 																	int ret);
 int							insert_time_loop(t_list **head, t_list *needle,
 																char reverse);
-int							insert_time_id(t_list *curr, t_list *needle,
+int							insert_time_id(t_list **head, t_list *needle,
 																char reverse);
 /*
 ** MAIN.C

@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:34:48 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/09 09:50:27 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/10 03:29:50 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,13 +66,17 @@ void		set_max_length(t_list *l, int len[6])
 {
 	t_file	f;
 	char	boolean;
+	int id;
 
 	len[4] = 3;
 	len[5] = 3;
 	boolean = 0;
+	id = ((t_file *)l->content)->id;
 	while (l)
 	{
 		f = *((t_file *)l->content);
+		if (f.id != id)
+			break ;
 		if (*(f.name) == '.' && !(g_flags & F_DOT) && ((l = l->next) || 1))
 			continue ;
 		len[0] = ft_max(len[0], ft_intlen_base(f.stats.st_nlink, 10));

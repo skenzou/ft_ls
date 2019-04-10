@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:23:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/09 08:48:59 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/10 03:33:34 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,11 @@ void			print_full_info(t_list *files)
 	{
 		file = *((t_file *)files->content);
 		if (file.id != id && ((id = file.id) || 1))
+		{
 			print_head(((t_file *)files->content)->path, files);
+			ft_bzero((void **)&length, sizeof(length));
+			set_max_length(files, length);
+		}
 		if (*(file.name) != '.' || (g_flags & F_DOT))
 		{
 			print_full_info_name(file, length, files);
