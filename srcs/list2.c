@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 02:49:05 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/10 05:53:07 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/10 05:58:23 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,7 @@ int			insert_time_r(t_list **head, t_list *needle, int ret)
 	if (ret == 0)
 	{
 		if (ft_strcmp(((t_file *)(*head)->content)->full_path,
-								((t_file *)needle->content)->full_path) < 0)
+							((t_file *)needle->content)->full_path) < 0 && !id)
 			ft_lstadd(head, needle);
 		else
 			insert_time_asc(head, needle, 1);
@@ -196,7 +196,7 @@ int			insert_time(t_list **head, t_list *needle, int ret)
 	if (ret == 0)
 	{
 		if (ft_strcmp(((t_file *)(*head)->content)->full_path,
-								((t_file *)needle->content)->full_path) > 0)
+						((t_file *)needle->content)->full_path) > 0 && !id)
 			ft_lstadd(head, needle);
 		else
 			insert_time_asc(head, needle, 0);
