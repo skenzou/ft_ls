@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 02:49:05 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/10 19:03:33 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/10 21:39:55 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,7 @@ int		insert_time_id(t_list **head, t_list *needle, char reverse)
 	while (curr)
 	{
 		if (curr->next && ((t_file *)(curr->next)->content)->id == id)
-		{
 			return (insert_time_loop(&curr, needle, reverse));
-		}
 		if (!curr->next)
 			break ;
 		curr = curr->next;
@@ -160,10 +158,10 @@ int			insert_time_r(t_list **head, t_list *needle, int ret)
 		return (add_head(head, needle));
 	id = ((t_file *)(*head)->content)->id - ((t_file *)needle->content)->id;
 	ret = compare_time(*head, needle);
-	if (ret == 0)
+	if (ret == 0 && !id)
 	{
 		if (ft_strcmp(((t_file *)(*head)->content)->full_path,
-							((t_file *)needle->content)->full_path) < 0 && !id)
+							((t_file *)needle->content)->full_path) < 0)
 			ft_lstadd(head, needle);
 		else
 			insert_time_asc(head, needle, 1);
@@ -187,10 +185,10 @@ int			insert_time(t_list **head, t_list *needle, int ret)
 		return (add_head(head, needle));
 	id = ((t_file *)(*head)->content)->id - ((t_file *)needle->content)->id;
 	ret = compare_time(*head, needle);
-	if (ret == 0)
+	if (ret == 0 && !id)
 	{
 		if (ft_strcmp(((t_file *)(*head)->content)->full_path,
-						((t_file *)needle->content)->full_path) > 0 && !id)
+						((t_file *)needle->content)->full_path) > 0)
 			ft_lstadd(head, needle);
 		else
 			insert_time_asc(head, needle, 0);

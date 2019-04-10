@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:27:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/09 08:50:14 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/10 21:58:40 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,10 @@ int			get_max_name_length(t_list *files)
 {
 	int		len;
 	t_file	file;
+	int		id;
 
 	len = 0;
+	id = ((t_file *)files->content)->id;
 	while (files)
 	{
 		file = *((t_file *)files->content);
@@ -27,7 +29,7 @@ int			get_max_name_length(t_list *files)
 		if (g_multiarg && files)
 		{
 			file = *((t_file *)files->content);
-			if (*(file.name) == '.' && !(*(file.name + 1)))
+			if (file.id != id)
 				break ;
 		}
 	}
@@ -39,9 +41,11 @@ int			get_col(t_list *files)
 	int		nbfile;
 	int		fileperline;
 	t_file	file;
+	int		id;
 
 	fileperline = get_term_colsize() / (get_max_name_length(files) + 1);
 	nbfile = 0;
+	id = ((t_file *)files->content)->id;
 	while (files)
 	{
 		file = *((t_file *)files->content);
@@ -51,7 +55,7 @@ int			get_col(t_list *files)
 		if (g_multiarg && files)
 		{
 			file = *((t_file *)files->content);
-			if (*(file.name) == '.' && !(*(file.name + 1)))
+			if (file.id != id)
 				break ;
 		}
 	}
