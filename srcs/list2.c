@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 02:49:05 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/10 04:47:28 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/10 05:53:07 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,8 @@ int		insert_time_id(t_list **head, t_list *needle, char reverse)
 
 	id = ((t_file *)(needle)->content)->id;
 	curr = *head;
+	if (((t_file *)(curr)->content)->id == id)
+		return (insert_time_loop(&curr, needle, reverse));
 	while (curr)
 	{
 		if (curr->next && ((t_file *)(curr->next)->content)->id == id)
@@ -105,7 +107,7 @@ int			insert_time_asc(t_list **head, t_list *needle, char reverse)
 			break ;
 		ret = ft_strcmp(((t_file *)(curr)->content)->full_path,
 					((t_file *)needle->content)->full_path);
-		if ((!reverse && ret > 0) || (reverse && ret < 0))
+		if ((!reverse && ret >= 0) || (reverse && ret <= 0))
 		{
 			prev->next = needle;
 			needle->next = curr;
@@ -165,7 +167,14 @@ int			insert_time_r(t_list **head, t_list *needle, int ret)
 	id = ((t_file *)(*head)->content)->id - ((t_file *)needle->content)->id;
 	ret = compare_time(*head, needle);
 	if (ret == 0)
-		return (insert_asc_r(head, needle, 1));
+	{
+		if (ft_strcmp(((t_file *)(*head)->content)->full_path,
+								((t_file *)needle->content)->full_path) < 0)
+			ft_lstadd(head, needle);
+		else
+			insert_time_asc(head, needle, 1);
+		return (1);
+	}
 	if (ret > 0 && !id)
 	{
 		ft_lstadd(head, needle);
@@ -185,7 +194,14 @@ int			insert_time(t_list **head, t_list *needle, int ret)
 	id = ((t_file *)(*head)->content)->id - ((t_file *)needle->content)->id;
 	ret = compare_time(*head, needle);
 	if (ret == 0)
-		return (insert_asc(head, needle, 1));
+	{
+		if (ft_strcmp(((t_file *)(*head)->content)->full_path,
+								((t_file *)needle->content)->full_path) > 0)
+			ft_lstadd(head, needle);
+		else
+			insert_time_asc(head, needle, 0);
+		return (1);
+	}
 	if (ret < 0 && !id)
 	{
 		ft_lstadd(head, needle);
