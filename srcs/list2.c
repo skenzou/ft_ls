@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 02:49:05 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/10 04:31:06 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/10 04:47:28 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,17 +39,20 @@ static void			insert_id_time(t_list **head, t_list *needle, char reverse)
 		if (((t_file *)curr->content)->name[0] == '.' && ((t_file *)curr->content)->name[1] == 0)
 		{
 			ret = compare_time(curr, needle);
-			if (ret == 0)
-				ret = ft_strcmp(((t_file *)(curr)->content)->full_path,
-							((t_file *)needle->content)->full_path);
 			if (temp == *head)
 			{
+				if (ret == 0)
+					ret = ft_strcmp(((t_file *)needle->content)->full_path,
+								((t_file *)(curr)->content)->full_path);
 				if ((!reverse && ret <= 0) || (reverse && ret >= 0))
 				{
 					ft_lstadd(head, needle);
 					return ;
 				}
 			}
+			if (ret == 0)
+				ret = ft_strcmp(((t_file *)(curr)->content)->full_path,
+							((t_file *)needle->content)->full_path);
 			if ((!reverse && ret <= 0) || (reverse && ret >= 0))
 			{
 				needle->next = temp->next;
