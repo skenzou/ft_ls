@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/10 21:59:16 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/11 01:57:08 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,25 @@ static void		set_lsflags(int argc, char **argv)
 					g_flags |= (1 << (ft_indexof(LSFLAGS, *argv[i])));
 				argv[i]++;
 			}
+}
+
+void	ft_ls_r(t_file *file)
+{
+	DIR			*dir;
+	t_list		*head;
+
+	ft_putchar('\n');
+	ft_putstr(file->path);
+	ft_putchar('/');
+	ft_putstr(file->name);
+	ft_putendl(":");
+	head = NULL;
+	dir = opendir(file->full_path);
+	list_dir(dir, &head, file->full_path);
+	if (!g_flags || (~g_flags & F_LIST))
+		simple_print_col(head);
+	else
+		print_full_info(head);
 }
 
 static	void	ft_ls(int argc, char **names)

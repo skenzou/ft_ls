@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:23:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/10 22:12:49 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/11 01:54:43 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,15 @@ static t_list	*simple_print_loop(t_list *head, size_t size, int col, int id)
 		mod++;
 		if (mod < col)
 			ft_putchar('\n');
+		if (mod == col)
+			ft_putchar('\n');
+	}
+	while (head)
+	{
+		file = *((t_file*)head->content);
+		if (S_ISDIR(file.stats.st_mode) && (g_flags & F_RECURSIVE) && *(file.name) != '.')
+			ft_ls_r(&file);
+		head = head->next;
 	}
 	return (files);
 }
@@ -138,6 +147,4 @@ void			simple_print_col(t_list *head)
 		ft_putendl("\n");
 		simple_print_col(head);
 	}
-	else
-		ft_putchar('\n');
 }
