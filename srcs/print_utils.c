@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print2.c                                           :+:      :+:    :+:   */
+/*   print_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 01:44:57 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/11 09:28:02 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/11 13:58:51 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,17 +56,20 @@ int				print_link(t_file *file)
 	return (0);
 }
 
-int				print_head(char *path, t_list *files)
+int				print_head(char *path, int header, t_list *files)
 {
 	int		totalsize;
 
-	totalsize = get_totalsize(files);
-	if (path)
+	if (header == -1)
+		return (1);
+	if (files)
+		totalsize = get_totalsize(files);
+	if (path && header)
 	{
 		ft_putstr(path);
 		ft_putstr(":\n");
 	}
-	if (files && totalsize != -1)
+	if ((g_flags & F_LIST) && totalsize != -1)
 		ft_printf("total %lld\n", totalsize);
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:23:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/11 11:13:15 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/11 13:52:26 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ static int		continue_reading(t_list *head)
 	return (1);
 }
 
-void			print_full_info(t_list *head)
+void			print_full_info(t_list *head, int header)
 {
 	t_file	*file;
 	int		length[6];
@@ -89,7 +89,7 @@ void			print_full_info(t_list *head)
 	files = head;
 	ft_bzero((void **)&length, sizeof(length));
 	set_max_length(files, length);
-	print_head(((t_file *)files->content)->path, files);
+	print_head(((t_file *)files->content)->path, header, files);
 	while (files)
 	{
 		file = (t_file *)files->content;
@@ -139,13 +139,13 @@ static t_list	*simple_print_loop(t_list *head, size_t size, int col)
 	return (files);
 }
 
-void			simple_print_col(t_list *head)
+void			simple_print_col(t_list *head, int header)
 {
 	size_t		size;
 
 	if (!head)
 		return ;
 	size = get_max_name_length(head) + 1;
-	print_head(((t_file *)head->content)->path, NULL);
+	print_head(((t_file *)head->content)->path, header, NULL);
 	simple_print_loop(head, size, 0);
 }

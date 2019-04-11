@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/11 12:29:11 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/11 13:47:06 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,11 +66,14 @@ void	ft_ls_r(t_file *file)
 	if ((dir = opendir(file->full_path)))
 		list_dir(dir, &head, file->full_path);
 	else
+	{
 		print_err(file->name);
+		return ;
+	}
 	if (!g_flags || (~g_flags & F_LIST))
-		simple_print_col(head);
+		simple_print_col(head, 1);
 	else
-		print_full_info(head);
+		print_full_info(head, 1);
 	ft_listdel(head);
 }
 
@@ -82,7 +85,7 @@ static	void	ft_ls(int argc, char **names)
 	int			j;
 
 	ft_bzero((void *)&biglist, sizeof(biglist));
-	i = argc == 1 ? -1 : 0;
+	i = -1;
 	j = 1;
 	while (++i < argc)
 		if (!(dir = opendir(names[i])))
@@ -92,26 +95,33 @@ static	void	ft_ls(int argc, char **names)
 	ft_lstrev(&biglist[0]);
 	handle_fiflnks(biglist[0], biglist[1]);
 	(g_flags & F_LAST_ACCESS) && sort_args_t(j, biglist, (g_flags & F_REVERSE));
-	i = 1;
-	while (i < j)
+	argc = j;
+	j = 1;
+	while (j < argc)
 	{
 		if (!g_flags || (~g_flags & F_LIST))
-			simple_print_col(biglist[i]);
+			simple_print_col(biglist[j], i > 1);
 		else
-			print_full_info(biglist[i]);
-		ft_listdel(biglist[i++]);
-		if (i < j)
+			print_full_info(biglist[j], i > 1);
+		ft_listdel(biglist[j++]);
+		if (j < argc)
 			ft_putchar('\n');
 	}
+	ft_listdel(biglist[0]);
 }
 
 int				main(int argc, char **argv)
 {
 	set_lsflags(argc, argv);
 	(g_flags > 0) && (argv++);
-	argc = argc - (g_flags > 0);
-	(argc > 2) && sort_args(argc, argv, (g_flags & F_REVERSE));
-	argc == 1 && (argv[0] = ".");
-	ft_ls(argc, argv);
+	argc -= (g_flags > 0);
+	if (argc == 1 && (argv[0] = "."))
+		ft_ls(argc, argv);
+	else
+	{
+		argv++ && argc--;
+		(argc > 1) && sort_args(argc, argv, (g_flags & F_REVERSE));
+		ft_ls(argc, argv);
+	}
 	return (0);
 }

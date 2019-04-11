@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:31:17 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/11 12:19:38 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/11 13:53:22 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,15 +77,15 @@ typedef struct				s_file
 /*
 ** PRINT.C
 */
-void						print_full_info(t_list *files);
-void						simple_print_col(t_list *head);
+void						print_full_info(t_list *head, int header);
+void						simple_print_col(t_list *head, int argc);
 /*
 ** PRINT_UTILS.C
 */
 void						print_newline(int size);
 void						print_time(t_file *file);
 int							print_link(t_file *file);
-int							print_head(char *path, t_list *files);
+int							print_head(char *path, int header, t_list *files);
 /*
 ** UTILS.C
 */

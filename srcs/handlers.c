@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:34:48 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/11 12:17:56 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/11 13:57:15 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,21 +40,20 @@ void		handle_fiflnks(t_list *fiflnks, t_list *head)
 		{
 			g_flags |= F_DOT;
 			if (!g_flags || (~g_flags & F_LIST))
-				simple_print_col(fiflnks);
+				simple_print_col(fiflnks, -1);
 			else
-				print_full_info(fiflnks);
+				print_full_info(fiflnks, -1);
 			g_flags &= ~F_DOT;
 		}
 		else
 		{
 			if (!g_flags || (~g_flags & F_LIST))
-				simple_print_col(fiflnks);
+				simple_print_col(fiflnks, -1);
 			else
-				print_full_info(fiflnks);
+				print_full_info(fiflnks, -1);
 		}
 		if (head)
 			ft_putchar('\n');
-		ft_listdel(fiflnks);
 	}
 }
 
