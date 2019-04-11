@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:31:17 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/11 13:53:22 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/11 23:55:25 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@
 # define ANSI_IBLUE			"\x1b[46m\x1b[34m"
 # define MAX_PATH_LEN		4096
 # define SIX_MONTHS			15778476
-# define COLOR				0
+# define DEFAULT_COLOR		0
 
 extern char					g_flags;
 
@@ -95,7 +95,7 @@ void 						print_err(char *name);
 /*
 ** UTILS2.C
 */
-int							sort_args_t(int argc, t_list *argv[argc], char reverse);
+int							sort_args_t(int argc, t_list *argv[argc], char rev);
 int							sort_args(int argc, char **argv, char reverse);
 void						ft_listdel(t_list *head);
 /*

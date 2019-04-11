@@ -6,13 +6,25 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/11 22:55:03 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/12 00:03:18 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
 char g_flags;
+//
+// void			print_flags(void)
+// {
+// 	(g_flags & F_LIST) && (ft_printf("g_flags: F_LIST\n"));
+// 	(g_flags & F_RECURSIVE) && (ft_printf("g_flags: F_RECURSIVE\n"));
+// 	(g_flags & F_DOT) && (ft_printf("g_flags: F_DOT\n"));
+// 	(g_flags & F_REVERSE) && (ft_printf("g_flags: F_REVERSE\n"));
+// 	(g_flags & F_SORT_TIME) && (ft_printf("g_flags: F_SORT TIME\n"));
+// 	(g_flags & F_LAST_ACCESS) && (ft_printf("g_flags: F_ACCESS TIME\n"));
+// 	(g_flags & F_SORT_OFF) && (ft_printf("g_flags: F_SORT OFF\n"));
+// 	(g_flags & F_COLOR) && (ft_printf("g_flags: F_COLOR\n"));
+// }
 
 /*
 **void			print_flags(void)
@@ -113,6 +125,7 @@ static	void	ft_ls(int argc, char **names)
 int				main(int argc, char **argv)
 {
 	set_lsflags(argc, argv);
+	//print_flags();
 	(g_flags > 0) && (argv++);
 	argc -= (g_flags > 0);
 	if (argc == 1 && (argv[0] = "."))

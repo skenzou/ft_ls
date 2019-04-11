@@ -6,16 +6,16 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:23:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/11 13:52:26 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/12 00:03:18 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-static void		print_name(t_file *file, int size)
+static void print_name_color(t_file *file, int size)
 {
 	if (S_ISDIR(file->stats.st_mode))
-		ft_printf(ANSI_BOLDCYAN "%-*s" ANSI_RESET, size, file->name);
+		ft_printf(ANSI_BOLDCYAN "%-*s"ANSI_RESET, size, file->name);
 	else if (S_ISFIFO(file->stats.st_mode))
 		ft_printf(ANSI_YELLOW "%-*s" ANSI_RESET, size, file->name);
 	else if (S_ISLNK(file->stats.st_mode))
@@ -33,6 +33,34 @@ static void		print_name(t_file *file, int size)
 	else
 		ft_printf("%-*s", size, file->name);
 	print_newline(size);
+}
+
+static void		print_name(t_file *file, int size)
+{
+	if (DEFAULT_COLOR || (g_flags & F_COLOR))
+	{
+		print_name_color(file, size);
+		return ;
+	}
+	if (S_ISDIR(file->stats.st_mode))
+		ft_printf("%-*s", size, file->name);
+	else if (S_ISFIFO(file->stats.st_mode))
+		ft_printf("%-*s", size, file->name);
+	else if (S_ISLNK(file->stats.st_mode))
+		ft_printf("%-*s", size, file->name);
+	else if (S_ISSOCK(file->stats.st_mode))
+		ft_printf("%-*s", size, file->name);
+	else if (S_ISCHR(file->stats.st_mode))
+		ft_printf("\x1b[43m\x1b[34m%-s\x1b[0m%*s",
+								file->name, size - file->size, "");
+	else if (S_ISBLK(file->stats.st_mode))
+		ft_printf("\x1b[46m\x1b[34m%-s\x1b[0m%*s",
+								file->name, size - file->size, "");
+	else if ((((file->stats.st_mode) & S_IXUSR) == S_IXUSR))
+		ft_printf("%-*s", size, file->name);
+	else
+		ft_printf("%-*s", size, file->name);
+		print_newline(size);
 }
 
 static void		print_full_info_name(t_file *file, int length[6])
