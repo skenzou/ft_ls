@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:23:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/11 06:28:08 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/11 07:41:02 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,14 +128,6 @@ static void		simple_print_name(t_file *file, size_t size, int i, int col)
 		print_name(file, size);
 }
 
-static void		simple_print_endl(int mod, int col)
-{
-	if (mod < col)
-		ft_putchar('\n');
-	if (mod == col)
-		ft_putchar('\n');
-}
-
 static t_list	*simple_print_loop(t_list *head, size_t size, int col, int id)
 {
 	int			mod;
@@ -159,7 +151,7 @@ static t_list	*simple_print_loop(t_list *head, size_t size, int col, int id)
 			if (files && ((t_file *)files->content)->id != id)
 				break ;
 		}
-		simple_print_endl(++mod, col);
+		(++mod <= col && i > 0) ? ft_putchar('\n') : 0;
 	}
 	(g_flags & F_RECURSIVE) && continue_reading(head);
 	return (files);
