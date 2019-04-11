@@ -6,56 +6,44 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:23:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/12 00:47:46 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/12 00:51:26 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-int			lsprint(char *string, int size, int reverse, char *color)
+int			lsprint(char *string, int size, char *color)
 {
-	int strlen;
-
-	strlen = ft_strlen(string);
-	if (reverse)
-	{
-		write(1, color, ft_strlen(color));
-		write(1, string, strlen);
-		ft_nputchar(' ', ft_max(0, size - strlen));
-	}
-	else
-	{
-		ft_nputchar(' ', ft_max(0, size - strlen));
-		write(1, color, ft_strlen(color));
-		write(1, string, strlen);
-	}
+	write(1, color, ft_strlen(color));
+	write(1, string, strlen);
 	write(1, "\x1b[0m", 4);
+	ft_nputchar(' ', ft_max(0, size - ft_strlen(string)));
 	return (0);
-}
+}s
 
 static void		print_name(t_file *file, int size)
 {
 	if (DEFAULT_COLOR || (g_flags & F_COLOR))
 	{
 		if (S_ISDIR(file->stats.st_mode))
-			lsprint(file->name, size, 1, ANSI_BOLDCYAN);
+			lsprint(file->name, size, ANSI_BOLDCYAN);
 		else if (S_ISFIFO(file->stats.st_mode))
-			lsprint(file->name, size, 1, ANSI_YELLOW);
+			lsprint(file->name, size, ANSI_YELLOW);
 		else if (S_ISLNK(file->stats.st_mode))
-			lsprint(file->name, size, 1, ANSI_PURPLE);
+			lsprint(file->name, size, ANSI_PURPLE);
 		else if (S_ISSOCK(file->stats.st_mode))
-			lsprint(file->name, size, 1, ANSI_GREEN);
+			lsprint(file->name, size, ANSI_GREEN);
 		else if (S_ISCHR(file->stats.st_mode))
-			lsprint(file->name, size, 1, "\x1b[43m\x1b[34m");
+			lsprint(file->name, size, "\x1b[43m\x1b[34m");
 		else if (S_ISBLK(file->stats.st_mode))
-			lsprint(file->name, size, 1, "\x1b[46m\x1b[34m");
+			lsprint(file->name, size, "\x1b[46m\x1b[34m");
 		else if ((((file->stats.st_mode) & S_IXUSR) == S_IXUSR))
-			lsprint(file->name, size, 1, ANSI_RED);
+			lsprint(file->name, size, ANSI_RED);
 		else
-			lsprint(file->name, size, 1, "");
+			lsprint(file->name, size, "");
 	}
 	else
-		lsprint(file->name, size, 1, "");
+		lsprint(file->name, size, "");
 	print_newline(size);
 }
 
