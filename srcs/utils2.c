@@ -6,7 +6,7 @@
 /*   By: Mohamed <Mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/11 11:14:51 by Mohamed           #+#    #+#             */
-/*   Updated: 2019/04/11 12:19:48 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/11 22:55:36 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int		sort_args_t(int argc, t_list *argv[argc], char reverse)
 	{
 		j = 0;
 		sorted = 1;
-		while (++j < argc)
+		while (++j < argc - 1)
 			if (argv[j + 1] && (ret = compare_folder_t(argv[j], argv[j + 1])))
 				if ((!reverse && ret < 0) || (reverse && ret > 0))
 				{
