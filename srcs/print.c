@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:23:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/12 00:51:26 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/12 00:59:55 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 int			lsprint(char *string, int size, char *color)
 {
 	write(1, color, ft_strlen(color));
-	write(1, string, strlen);
+	write(1, string, ft_strlen(string));
 	write(1, "\x1b[0m", 4);
 	ft_nputchar(' ', ft_max(0, size - ft_strlen(string)));
 	return (0);
-}s
+}
 
 static void		print_name(t_file *file, int size)
 {
