@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:32:19 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/12 00:17:19 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/12 01:04:44 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void		list_dir(DIR *dir, t_list **head, char *path)
 			time = file.stats.st_mtimespec.tv_sec;
 			ntime = file.stats.st_mtimespec.tv_nsec;
 		}
-		file.size = ft_strlen(d->d_name);
+		file.namesize = ft_strlen(d->d_name);
 		file.time = time;
 		file.ntime = ntime;
 		list = ft_lstnew((void *)&file, sizeof(t_file));

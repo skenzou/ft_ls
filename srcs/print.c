@@ -6,18 +6,18 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:23:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/12 00:59:55 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/12 01:04:23 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-int			lsprint(char *string, int size, char *color)
+int			lsprint(t_file *file, int size, char *color)
 {
 	write(1, color, ft_strlen(color));
-	write(1, string, ft_strlen(string));
+	write(1, file->name, file->namesize);
 	write(1, "\x1b[0m", 4);
-	ft_nputchar(' ', ft_max(0, size - ft_strlen(string)));
+	ft_nputchar(' ', ft_max(0, size - file->namesize));
 	return (0);
 }
 
@@ -26,24 +26,24 @@ static void		print_name(t_file *file, int size)
 	if (DEFAULT_COLOR || (g_flags & F_COLOR))
 	{
 		if (S_ISDIR(file->stats.st_mode))
-			lsprint(file->name, size, ANSI_BOLDCYAN);
+			lsprint(file, size, ANSI_BOLDCYAN);
 		else if (S_ISFIFO(file->stats.st_mode))
-			lsprint(file->name, size, ANSI_YELLOW);
+			lsprint(file, size, ANSI_YELLOW);
 		else if (S_ISLNK(file->stats.st_mode))
-			lsprint(file->name, size, ANSI_PURPLE);
+			lsprint(file, size, ANSI_PURPLE);
 		else if (S_ISSOCK(file->stats.st_mode))
-			lsprint(file->name, size, ANSI_GREEN);
+			lsprint(file, size, ANSI_GREEN);
 		else if (S_ISCHR(file->stats.st_mode))
-			lsprint(file->name, size, "\x1b[43m\x1b[34m");
+			lsprint(file, size, "\x1b[43m\x1b[34m");
 		else if (S_ISBLK(file->stats.st_mode))
-			lsprint(file->name, size, "\x1b[46m\x1b[34m");
+			lsprint(file, size, "\x1b[46m\x1b[34m");
 		else if ((((file->stats.st_mode) & S_IXUSR) == S_IXUSR))
-			lsprint(file->name, size, ANSI_RED);
+			lsprint(file, size, ANSI_RED);
 		else
-			lsprint(file->name, size, "");
+			lsprint(file, size, "");
 	}
 	else
-		lsprint(file->name, size, "");
+		lsprint(file, size, "");
 	print_newline(size);
 }
 
@@ -58,7 +58,7 @@ static void		print_full_info_name(t_file *file, int length[6])
 		length[4], major(file->stats.st_rdev),
 		length[5], minor(file->stats.st_rdev));
 		print_time(file);
-		print_name(file, file->size);
+		print_name(file, file->namesize);
 		(S_ISLNK(file->stats.st_mode)) && print_link(file);
 	}
 	else

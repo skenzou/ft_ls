@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:31:17 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/11 23:55:25 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/12 01:04:32 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ typedef struct group		t_group;
 typedef struct				s_file
 {
 	t_stat					stats;
-	size_t					size;
+	size_t					namesize;
 	char					perms[11 + 1];
 	char					*name;
 	char					*path;
