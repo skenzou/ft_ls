@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 01:44:57 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/12 01:06:13 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/12 01:41:22 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,10 @@ int				print_link(t_file *file)
 
 	ft_bzero(buff, MAX_PATH_LEN);
 	if (readlink(file->full_path, buff, MAX_PATH_LEN) >= 0)
-		ft_printf(" -> %s", buff);
+	{
+		ft_putstr(" -> ");
+		ft_putstr(buff);
+	}
 	else
 		exit(1);
 	return (0);
@@ -70,6 +73,10 @@ int				print_head(char *path, int header, t_list *files)
 		ft_putstr(":\n");
 	}
 	if ((g_flags & F_LIST) && totalsize != -1)
-		ft_printf("total %lld\n", totalsize);
+	{
+		ft_putstr("total ");
+		ft_putnbr(totalsize);
+		ft_putchar('\n');
+	}
 	return (1);
 }
