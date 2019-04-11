@@ -6,18 +6,18 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:23:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/12 01:04:23 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/12 01:37:59 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-int			lsprint(t_file *file, int size, char *color)
+int			lsprint(char *string, int namesize, int padding, char *color)
 {
 	write(1, color, ft_strlen(color));
-	write(1, file->name, file->namesize);
+	write(1, string, namesize);
 	write(1, "\x1b[0m", 4);
-	ft_nputchar(' ', ft_max(0, size - file->namesize));
+	ft_nputchar(' ', ft_max(0, padding - namesize));
 	return (0);
 }
 
@@ -26,48 +26,58 @@ static void		print_name(t_file *file, int size)
 	if (DEFAULT_COLOR || (g_flags & F_COLOR))
 	{
 		if (S_ISDIR(file->stats.st_mode))
-			lsprint(file, size, ANSI_BOLDCYAN);
+			lsprint(file->name, file->namesize, size, ANSI_BOLDCYAN);
 		else if (S_ISFIFO(file->stats.st_mode))
-			lsprint(file, size, ANSI_YELLOW);
+			lsprint(file->name, file->namesize, size, ANSI_YELLOW);
 		else if (S_ISLNK(file->stats.st_mode))
-			lsprint(file, size, ANSI_PURPLE);
+			lsprint(file->name, file->namesize, size, ANSI_PURPLE);
 		else if (S_ISSOCK(file->stats.st_mode))
-			lsprint(file, size, ANSI_GREEN);
+			lsprint(file->name, file->namesize, size, ANSI_GREEN);
 		else if (S_ISCHR(file->stats.st_mode))
-			lsprint(file, size, "\x1b[43m\x1b[34m");
+			lsprint(file->name, file->namesize, size, "\x1b[43m\x1b[34m");
 		else if (S_ISBLK(file->stats.st_mode))
-			lsprint(file, size, "\x1b[46m\x1b[34m");
+			lsprint(file->name, file->namesize, size, "\x1b[46m\x1b[34m");
 		else if ((((file->stats.st_mode) & S_IXUSR) == S_IXUSR))
-			lsprint(file, size, ANSI_RED);
+			lsprint(file->name, file->namesize, size, ANSI_RED);
 		else
-			lsprint(file, size, "");
+			lsprint(file->name, file->namesize, size, "");
 	}
 	else
-		lsprint(file, size, "");
+		lsprint(file->name, file->namesize, size, "");
 	print_newline(size);
+}
+int lsputnbr(int nbr, int padding, int afterspace)
+{
+	ft_putchar(' ');
+	ft_nputchar(' ', padding - ft_intlen_base(nbr, 10));
+	ft_putnbr(nbr);
+	if (afterspace)
+		ft_putchar(' ');
+	return (1);
 }
 
 static void		print_full_info_name(t_file *file, int length[6])
 {
+	ft_putstr(file->perms);
+	lsputnbr(file->stats.st_nlink, length[0], 1);
+	lsprint(getpwuid(file->stats.st_uid)->pw_name,
+		ft_strlen(getpwuid(file->stats.st_uid)->pw_name), length[2], "");
+	write(1, "  ", 2);
+	lsprint(getgrgid(file->stats.st_gid)->gr_name,
+		ft_strlen(getgrgid(file->stats.st_gid)->gr_name), length[3], "");
 	if (S_ISCHR(file->stats.st_mode) || S_ISBLK(file->stats.st_mode))
 	{
-		ft_printf("%s %*hu %-*s  %-*s %*d, %*d", file->perms,
-		length[0], file->stats.st_nlink,
-		length[2], getpwuid(file->stats.st_uid)->pw_name,
-		length[3], getgrgid(file->stats.st_gid)->gr_name,
-		length[4], major(file->stats.st_rdev),
-		length[5], minor(file->stats.st_rdev));
+		lsputnbr(major(file->stats.st_rdev), length[4], 0);
+		ft_putchar(',');
+		lsputnbr(minor(file->stats.st_rdev), length[5], 0);
 		print_time(file);
 		print_name(file, file->namesize);
 		(S_ISLNK(file->stats.st_mode)) && print_link(file);
 	}
 	else
 	{
-		ft_printf("%s %*hu %-*s  %-*s  %*lld", file->perms,
-		length[0], file->stats.st_nlink,
-		length[2], getpwuid(file->stats.st_uid)->pw_name,
-		length[3], getgrgid(file->stats.st_gid)->gr_name,
-		length[1], file->stats.st_size);
+		write(1, " ", 1);
+		lsputnbr(file->stats.st_size, length[1], 0);
 		print_time(file);
 		print_name(file, 0);
 		(S_ISLNK(file->stats.st_mode)) && print_link(file);
