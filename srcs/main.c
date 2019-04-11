@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/11 11:47:36 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/11 12:29:11 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,36 +77,22 @@ void	ft_ls_r(t_file *file)
 static	void	ft_ls(int argc, char **names)
 {
 	DIR			*dir;
-	t_list		*head;
-	t_list		*fiflnks;
 	int			i;
-	t_list		*biglist[argc];
+	t_list		*biglist[argc + 1];
 	int			j;
 
-	head = NULL;
-	fiflnks = NULL;
-	i = argc == 1 ? 0 : 1;
-	j = 0;
-	while (i < argc)
-	{
+	ft_bzero((void *)&biglist, sizeof(biglist));
+	i = argc == 1 ? -1 : 0;
+	j = 1;
+	while (++i < argc)
 		if (!(dir = opendir(names[i])))
-			handle_notdir(names[i], &fiflnks);
+			handle_notdir(names[i], &biglist[0]);
 		else
-		{
-			list_dir(dir, &head, names[i]);
-			biglist[j++] = head;
-			head = NULL;
-		}
-		i++;
-	}
-	biglist[j] = NULL;
-	if (!(g_flags & F_REVERSE))
-		ft_lstrev(&fiflnks);
-	handle_fiflnks(fiflnks, head);
-	ft_listdel(fiflnks);
-	if ((g_flags & F_LAST_ACCESS_TIME))
-		sort_args_time(j, biglist, (g_flags & F_REVERSE));
-	i = 0;
+			list_dir(dir, &biglist[j++], names[i]);
+	ft_lstrev(&biglist[0]);
+	handle_fiflnks(biglist[0], biglist[1]);
+	(g_flags & F_LAST_ACCESS) && sort_args_t(j, biglist, (g_flags & F_REVERSE));
+	i = 1;
 	while (i < j)
 	{
 		if (!g_flags || (~g_flags & F_LIST))

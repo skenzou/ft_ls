@@ -6,7 +6,7 @@
 /*   By: Mohamed <Mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/11 11:14:51 by Mohamed           #+#    #+#             */
-/*   Updated: 2019/04/11 11:48:49 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/11 12:19:48 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int			sort_args(int argc, char **argv, char reverse)
 	return (1);
 }
 
-int		sort_args_time(int argc, t_list *argv[argc], char reverse)
+int		sort_args_t(int argc, t_list *argv[argc], char reverse)
 {
 	int		sorted;
 	int		j;
@@ -47,7 +47,7 @@ int		sort_args_time(int argc, t_list *argv[argc], char reverse)
 	sorted = 0;
 	while (!sorted)
 	{
-		j = -1;
+		j = 0;
 		sorted = 1;
 		while (++j < argc)
 			if (argv[j + 1] && (ret = compare_folder_t(argv[j], argv[j + 1])))

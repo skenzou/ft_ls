@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:31:17 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/11 11:45:20 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/11 12:19:38 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@
 # define F_RECURSIVE		(1 << 1)
 # define F_DOT				(1 << 2)
 # define F_REVERSE			(1 << 3)
-# define F_SORT_TIME        (1 << 4)
-# define F_LAST_ACCESS_TIME	(1 << 5)
+# define F_SORT_TIME		(1 << 4)
+# define F_LAST_ACCESS		(1 << 5)
 # define F_SORT_OFF			(1 << 6)
 # define F_COLOR			(1 << 7)
 # define ANSI_RED			"\x1b[31m"
@@ -95,7 +95,7 @@ void 						print_err(char *name);
 /*
 ** UTILS2.C
 */
-int							sort_args_time(int argc, t_list *argv[argc], char reverse);
+int							sort_args_t(int argc, t_list *argv[argc], char reverse);
 int							sort_args(int argc, char **argv, char reverse);
 void						ft_listdel(t_list *head);
 /*

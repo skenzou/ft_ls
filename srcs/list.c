@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:32:19 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/11 10:25:44 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/11 12:20:16 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,10 +98,10 @@ void		list_dir(DIR *dir, t_list **head, char *path)
 		list = ft_lstnew((void *)&file, sizeof(t_file));
 		list == NULL ? exit(1) : 0;
 		if (g_flags & F_REVERSE)
-			(g_flags & F_LAST_ACCESS_TIME) ? insert_time_r(head, list, 1)
+			(g_flags & F_LAST_ACCESS) ? insert_time_r(head, list, 1)
 											: insert_asc_r(head, list, 1);
 		else
-			(g_flags & F_LAST_ACCESS_TIME) ? insert_time(head, list, 1)
+			(g_flags & F_LAST_ACCESS) ? insert_time(head, list, 1)
 											: insert_asc(head, list, 1);
 	}
 	closedir(dir);

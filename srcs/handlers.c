@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:34:48 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/11 11:06:40 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/11 12:17:56 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void		handle_fiflnks(t_list *fiflnks, t_list *head)
 		}
 		if (head)
 			ft_putchar('\n');
+		ft_listdel(fiflnks);
 	}
 }
 
