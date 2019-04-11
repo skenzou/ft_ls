@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 01:44:57 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/09 04:19:17 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/11 09:28:02 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,4 +42,31 @@ void		print_time(t_file *file)
 		ft_printf(" %.7s %.4s ", date + 4, date + 20);
 	else
 		ft_printf(" %.12s ", date + 4);
+}
+
+int				print_link(t_file *file)
+{
+	char	buff[MAX_PATH_LEN];
+
+	ft_bzero(buff, MAX_PATH_LEN);
+	if (readlink(file->full_path, buff, MAX_PATH_LEN) >= 0)
+		ft_printf(" -> %s", buff);
+	else
+		exit(1);
+	return (0);
+}
+
+int				print_head(char *path, t_list *files)
+{
+	int		totalsize;
+
+	totalsize = get_totalsize(files);
+	if (path)
+	{
+		ft_putstr(path);
+		ft_putstr(":\n");
+	}
+	if (files && totalsize != -1)
+		ft_printf("total %lld\n", totalsize);
+	return (1);
 }

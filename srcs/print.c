@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:23:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/11 08:07:54 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/11 11:13:15 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,83 +35,67 @@ static void		print_name(t_file *file, int size)
 	print_newline(size);
 }
 
-static void		print_full_info_name(t_file file, int length[6], t_list *files)
+static void		print_full_info_name(t_file *file, int length[6])
 {
-	if (S_ISCHR(file.stats.st_mode) || S_ISBLK(file.stats.st_mode))
+	if (S_ISCHR(file->stats.st_mode) || S_ISBLK(file->stats.st_mode))
 	{
-		ft_printf("%s %*hu %-*s  %-*s %*d, %*d", file.perms,
-		length[0], file.stats.st_nlink,
-		length[2], getpwuid(file.stats.st_uid)->pw_name,
-		length[3], getgrgid(file.stats.st_gid)->gr_name,
-		length[4], major(file.stats.st_rdev),
-		length[5], minor(file.stats.st_rdev));
-		print_time(&file);
-		print_name(&file, file.size);
-		(S_ISLNK(file.stats.st_mode)) && print_link(&file);
-		print_newline(check_next(files->next, 0, file.id));
+		ft_printf("%s %*hu %-*s  %-*s %*d, %*d", file->perms,
+		length[0], file->stats.st_nlink,
+		length[2], getpwuid(file->stats.st_uid)->pw_name,
+		length[3], getgrgid(file->stats.st_gid)->gr_name,
+		length[4], major(file->stats.st_rdev),
+		length[5], minor(file->stats.st_rdev));
+		print_time(file);
+		print_name(file, file->size);
+		(S_ISLNK(file->stats.st_mode)) && print_link(file);
 	}
 	else
 	{
-		ft_printf("%s %*hu %-*s  %-*s  %*lld", file.perms,
-		length[0], file.stats.st_nlink,
-		length[2], getpwuid(file.stats.st_uid)->pw_name,
-		length[3], getgrgid(file.stats.st_gid)->gr_name,
-		length[1], file.stats.st_size);
-		print_time(&file);
-		print_name(&file, 0);
-		(S_ISLNK(file.stats.st_mode)) && print_link(&file);
-		print_newline(check_next(files->next, 0, file.id));
+		ft_printf("%s %*hu %-*s  %-*s  %*lld", file->perms,
+		length[0], file->stats.st_nlink,
+		length[2], getpwuid(file->stats.st_uid)->pw_name,
+		length[3], getgrgid(file->stats.st_gid)->gr_name,
+		length[1], file->stats.st_size);
+		print_time(file);
+		print_name(file, 0);
+		(S_ISLNK(file->stats.st_mode)) && print_link(file);
 	}
 }
 
 static int		continue_reading(t_list *head)
 {
 	t_file	file;
-	int		save;
-	int		id;
 
-	save = g_multiarg;
-	g_multiarg = 0;
-	id = ((t_file *)(head)->content)->id;
 	while (head)
 	{
 		file = *((t_file*)head->content);
-		if (id != file.id)
-			break ;
 		if (*(file.name) != '.' || (g_flags & F_DOT))
 			if (S_ISDIR(file.stats.st_mode)
 					&& ft_strcmp(file.name, ".") && ft_strcmp(file.name, ".."))
 				ft_ls_r(&file);
 		head = head->next;
 	}
-	g_multiarg = save;
 	return (1);
 }
 
 void			print_full_info(t_list *head)
 {
-	t_file	file;
+	t_file	*file;
 	int		length[6];
-	int		id;
 	t_list	*files;
 
+	if (!head)
+		return ;
 	files = head;
 	ft_bzero((void **)&length, sizeof(length));
 	set_max_length(files, length);
-	files && (id = ((t_file *)files->content)->id);
-	(files && id != -1) && print_head(((t_file *)files->content)->path, files);
+	print_head(((t_file *)files->content)->path, files);
 	while (files)
 	{
-		file = *((t_file *)files->content);
-		if (file.id != id && ((id = file.id) || 1))
+		file = (t_file *)files->content;
+		if (*(file->name) != '.' || (g_flags & F_DOT))
 		{
-			print_head(((t_file *)files->content)->path, files);
-			ft_bzero((void **)&length, sizeof(length));
-			set_max_length(files, length);
-		}
-		if (*(file.name) != '.' || (g_flags & F_DOT))
-		{
-			print_full_info_name(file, length, files);
+			print_full_info_name(file, length);
 			ft_putchar('\n');
 		}
 		files = files->next;
@@ -128,12 +112,12 @@ static void		simple_print_name(t_file *file, size_t size, int i, int col)
 		print_name(file, size);
 }
 
-static t_list	*simple_print_loop(t_list *head, size_t size, int col, int id)
+static t_list	*simple_print_loop(t_list *head, size_t size, int col)
 {
 	int			mod;
 	t_list		*files;
 	int			i;
-	t_file		file;
+	t_file		*file;
 	int			nbfiles;
 
 	mod = 0;
@@ -143,13 +127,11 @@ static t_list	*simple_print_loop(t_list *head, size_t size, int col, int id)
 		files = head;
 		while (files)
 		{
-			file = *((t_file*)files->content);
-			if (*(file.name) != '.' || (g_flags & F_DOT))
-				if (i++ % col == mod && (file.nbfiles = nbfiles))
-					simple_print_name(&file, size, i, col);
+			file = (t_file*)files->content;
+			if (*(file->name) != '.' || (g_flags & F_DOT))
+				if (i++ % col == mod && (file->nbfiles = nbfiles))
+					simple_print_name(file, size, i, col);
 			files = files->next;
-			if (files && ((t_file *)files->content)->id != id)
-				break ;
 		}
 		(++mod <= col && i > 0) ? ft_putchar('\n') : 0;
 	}
@@ -160,16 +142,10 @@ static t_list	*simple_print_loop(t_list *head, size_t size, int col, int id)
 void			simple_print_col(t_list *head)
 {
 	size_t		size;
-	int			id;
 
 	if (!head)
 		return ;
 	size = get_max_name_length(head) + 1;
-	id = ((t_file *)head->content)->id;
 	print_head(((t_file *)head->content)->path, NULL);
-	if ((head = simple_print_loop(head, size, 0, id)))
-	{
-		ft_putchar('\n');
-		simple_print_col(head);
-	}
+	simple_print_loop(head, size, 0);
 }

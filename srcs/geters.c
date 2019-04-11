@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:27:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/11 08:05:39 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/11 11:13:40 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,15 @@
 int			get_max_name_length(t_list *files)
 {
 	int		len;
-	t_file	file;
-	int		id;
+	t_file	*file;
 
 	len = 0;
-	id = ((t_file *)files->content)->id;
 	while (files)
 	{
-		file = *((t_file *)files->content);
-		if (*(file.name) != '.' || (g_flags & F_DOT))
-			len = ft_max(file.size, len);
+		file = (t_file *)files->content;
+		if (*(file->name) != '.' || (g_flags & F_DOT))
+			len = ft_max(file->size, len);
 		files = files->next;
-		if (g_multiarg && files)
-		{
-			file = *((t_file *)files->content);
-			if (file.id != id)
-				break ;
-		}
 	}
 	return (len);
 }
@@ -39,25 +31,17 @@ int			get_max_name_length(t_list *files)
 int			get_col(t_list *files, int *nbfile)
 {
 	int		fileperline;
-	t_file	file;
-	int		id;
+	t_file	*file;
 	int		col;
 
 	fileperline = get_term_colsize() / (get_max_name_length(files) + 1);
 	*nbfile = 0;
-	id = ((t_file *)files->content)->id;
 	while (files)
 	{
-		file = *((t_file *)files->content);
-		if (*(file.name) != '.' || (g_flags & F_DOT))
+		file = (t_file *)files->content;
+		if (*(file->name) != '.' || (g_flags & F_DOT))
 			(*nbfile)++;
 		files = files->next;
-		if (g_multiarg && files)
-		{
-			file = *((t_file *)files->content);
-			if (file.id != id)
-				break ;
-		}
 	}
 	col = (*nbfile / fileperline) + (*nbfile % fileperline != 0 ? 1 : 0);
 	return (col > 0 ? col : 1);
@@ -66,28 +50,20 @@ int			get_col(t_list *files, int *nbfile)
 long long	get_totalsize(t_list *files)
 {
 	long long		size;
-	t_file			file;
-	int				id;
+	t_file			*file;
 	int				found;
 
 	if (!files)
 		return (0);
 	size = 0;
-	id = ((t_file*)files->content)->id;
 	found = 0;
 	while (files)
 	{
-		file = *((t_file*)files->content);
-		if (*(file.name) != '.' || (g_flags & F_DOT))
+		file = (t_file*)files->content;
+		if (*(file->name) != '.' || (g_flags & F_DOT))
 			found = 1;
-		size += file.stats.st_blocks;
+		size += file->stats.st_blocks;
 		files = files->next;
-		if (g_multiarg && files)
-		{
-			file = *((t_file*)files->content);
-			if (file.id != id)
-				break ;
-		}
 	}
 	return (found ? size : -1);
 }

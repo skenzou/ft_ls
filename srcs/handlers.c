@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:34:48 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/10 22:12:34 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/11 11:06:40 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,11 @@
 
 void		handle_notdir(char *name, t_list **fiflnks)
 {
-	char	*err;
 	t_file	file;
 	t_list	*list;
 
 	ft_bzero((void *)&file, sizeof(t_file));
 	file = create_file(name, NULL);
-	file.id = -1;
 	file.size = ft_strlen(name);
 	if (S_ISFIFO(file.stats.st_mode) || S_ISLNK(file.stats.st_mode) ||
 		S_ISREG(file.stats.st_mode) || S_ISBLK(file.stats.st_mode) ||
@@ -31,11 +29,7 @@ void		handle_notdir(char *name, t_list **fiflnks)
 		ft_lstadd(fiflnks, list);
 	}
 	else
-	{
-		err = ft_strjoin("ls: ", name);
-		perror(err);
-		ft_strdel(&err);
-	}
+		print_err(name);
 }
 
 void		handle_fiflnks(t_list *fiflnks, t_list *head)
@@ -65,30 +59,26 @@ void		handle_fiflnks(t_list *fiflnks, t_list *head)
 
 void		set_max_length(t_list *l, int len[6])
 {
-	t_file	f;
+	t_file	*f;
 	char	boolean;
-	int id;
 
 	len[4] = 3;
 	len[5] = 3;
 	boolean = 0;
-	id = ((t_file *)l->content)->id;
 	while (l)
 	{
-		f = *((t_file *)l->content);
-		if (f.id != id)
-			break ;
-		if (*(f.name) == '.' && !(g_flags & F_DOT) && ((l = l->next) || 1))
+		f = (t_file *)l->content;
+		if (*(f->name) == '.' && !(g_flags & F_DOT) && ((l = l->next) || 1))
 			continue ;
-		len[0] = ft_max(len[0], ft_intlen_base(f.stats.st_nlink, 10));
-		len[1] = ft_max(len[1], ft_intlen_base(f.stats.st_size, 10));
-		len[2] = ft_max(len[2], ft_strlen(getpwuid(f.stats.st_uid)->pw_name));
-		len[3] = ft_max(len[3], ft_strlen(getgrgid(f.stats.st_gid)->gr_name));
-		if (S_ISCHR(f.stats.st_mode) || S_ISBLK(f.stats.st_mode))
+		len[0] = ft_max(len[0], ft_intlen_base(f->stats.st_nlink, 10));
+		len[1] = ft_max(len[1], ft_intlen_base(f->stats.st_size, 10));
+		len[2] = ft_max(len[2], ft_strlen(getpwuid(f->stats.st_uid)->pw_name));
+		len[3] = ft_max(len[3], ft_strlen(getgrgid(f->stats.st_gid)->gr_name));
+		if (S_ISCHR(f->stats.st_mode) || S_ISBLK(f->stats.st_mode))
 		{
 			boolean = 1;
-			len[4] = ft_max(ft_intlen_base(major(f.stats.st_rdev), 10), len[4]);
-			len[5] = ft_max(ft_intlen_base(minor(f.stats.st_rdev), 10), len[5]);
+			len[4] = ft_max(ft_intlen_base(major(f->stats.st_rdev), 10), len[4]);
+			len[5] = ft_max(ft_intlen_base(minor(f->stats.st_rdev), 10), len[5]);
 		}
 		l = l->next;
 	}
@@ -104,18 +94,4 @@ char		third_permission(int m, char type_user)
 		return (char[2][2]){"-S", "xs"}[(m & S_IXGRP) > 0][(m & S_ISGID) > 0];
 	else
 		return ((char[2][2]){"-T", "xt"}[(m & S_IXOTH) > 0][(m & S_ISTXT) > 0]);
-}
-
-void		cat_fullpath(t_file *file, char *name, char *path)
-{
-	ft_bzero((void *)&(file->full_path), MAX_PATH_LEN);
-	if (path)
-	{
-		ft_strcpy(file->full_path, path);
-		ft_strcat(file->full_path, "/");
-	}
-	ft_strcat(file->full_path, name);
-	file->name = ft_strdup(name);
-	!file->name ? exit(1) : 0;
-	file->path = path;
 }

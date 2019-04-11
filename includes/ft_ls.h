@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:31:17 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/11 06:25:29 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/11 11:45:20 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@
 # define COLOR				0
 
 extern char					g_flags;
-extern char					g_multiarg;
 
 typedef struct stat			t_stat;
 typedef struct dirent		t_dirent;
@@ -70,8 +69,9 @@ typedef struct				s_file
 	char					*path;
 	char					full_path[MAX_PATH_LEN];
 	char					printed;
-	int						id;
 	int						nbfiles;
+	time_t					time;
+	long					ntime;
 }							t_file;
 
 /*
@@ -80,17 +80,24 @@ typedef struct				s_file
 void						print_full_info(t_list *files);
 void						simple_print_col(t_list *head);
 /*
-** PRINT2.C
+** PRINT_UTILS.C
 */
 void						print_newline(int size);
 void						print_time(t_file *file);
+int							print_link(t_file *file);
+int							print_head(char *path, t_list *files);
 /*
 ** UTILS.C
 */
-int							print_link(t_file *file);
-int							check_next(t_list *list, int size, int id);
-int							print_head(char *path, t_list *files);
 t_file						create_file(char *name, char *path);
+int							compare_folder_t(t_list *first, t_list *second);
+void 						print_err(char *name);
+/*
+** UTILS2.C
+*/
+int							sort_args_time(int argc, t_list *argv[argc], char reverse);
+int							sort_args(int argc, char **argv, char reverse);
+void						ft_listdel(t_list *head);
 /*
 ** GETERS.C
 */
@@ -106,7 +113,6 @@ void						handle_notdir(char *name, t_list **fiflnks);
 void						handle_fiflnks(t_list *fiflnks, t_list *head);
 void						set_max_length(t_list *files, int len[4]);
 char						third_permission(int m, char type_user);
-void						cat_fullpath(t_file *file, char *name, char *path);
 /*
 ** LIST.C
 */

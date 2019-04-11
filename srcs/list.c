@@ -6,30 +6,11 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:32:19 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/11 01:56:59 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/11 10:25:44 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
-
-int			insert_asc_id(t_list *curr, t_list *needle, char reverse)
-{
-	int		id;
-
-	id = ((t_file *)(curr)->content)->id;
-	while (curr)
-	{
-		if (curr->next && ((t_file *)(curr->next)->content)->id != id)
-		{
-			return (insert_asc_loop(&curr, needle, reverse));
-		}
-		if (!curr->next)
-			break ;
-		curr = curr->next;
-	}
-	curr->next = needle;
-	return (1);
-}
 
 int			insert_asc_loop(t_list **head, t_list *needle, char reverse)
 {
@@ -43,8 +24,6 @@ int			insert_asc_loop(t_list **head, t_list *needle, char reverse)
 	{
 		ret = ft_strcmp(((t_file *)(curr)->content)->full_path,
 				((t_file *)needle->content)->full_path);
-		if (ret == 0)
-			return (insert_asc_id(curr, needle, reverse));
 		if ((!reverse && ret > 0) || (reverse && ret < 0))
 		{
 			prev->next = needle;
@@ -74,8 +53,6 @@ int			insert_asc_r(t_list **head, t_list *needle, int ret)
 		ft_lstadd(head, needle);
 		return (1);
 	}
-	if (ret == 0)
-		return (insert_asc_id(*head, needle, 1));
 	return (insert_asc_loop(head, needle, 1));
 }
 
@@ -95,8 +72,6 @@ int			insert_asc(t_list **head, t_list *needle, int ret)
 		ft_lstadd(head, needle);
 		return (1);
 	}
-	if (ret == 0)
-		return (insert_asc_id(*head, needle, 0));
 	return (insert_asc_loop(head, needle, 0));
 }
 
@@ -105,14 +80,21 @@ void		list_dir(DIR *dir, t_list **head, char *path)
 	t_dirent		*d;
 	t_list			*list;
 	t_file			file;
-	static char		id;
+	time_t			time;
+	long			ntime;
 
 	list = NULL;
 	while ((d = readdir(dir)))
 	{
 		file = create_file(d->d_name, path);
+		if (*(file.name) == '.' && !*(file.name + 1))
+		{
+			time = file.stats.st_mtimespec.tv_sec;
+			ntime = file.stats.st_mtimespec.tv_nsec;
+		}
 		file.size = ft_strlen(d->d_name);
-		file.id = id;
+		file.time = time;
+		file.ntime = ntime;
 		list = ft_lstnew((void *)&file, sizeof(t_file));
 		list == NULL ? exit(1) : 0;
 		if (g_flags & F_REVERSE)
@@ -122,6 +104,5 @@ void		list_dir(DIR *dir, t_list **head, char *path)
 			(g_flags & F_LAST_ACCESS_TIME) ? insert_time(head, list, 1)
 											: insert_asc(head, list, 1);
 	}
-	id++;
 	closedir(dir);
 }
