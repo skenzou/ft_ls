@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:23:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/11 01:54:43 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/11 02:05:22 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,27 @@ static void		print_full_info_name(t_file file, int length[6], t_list *files)
 	}
 }
 
-void			print_full_info(t_list *files)
+static void		continue_reading(t_list *head)
+{
+	t_file file;
+
+	while (head)
+	{
+		file = *((t_file*)head->content);
+		if (S_ISDIR(file.stats.st_mode) && *(file.name) != '.')
+			ft_ls_r(&file);
+		head = head->next;
+	}
+}
+
+void			print_full_info(t_list *head)
 {
 	t_file	file;
 	int		length[6];
 	int		id;
+	t_list	*files;
 
+	files = head;
 	ft_bzero((void **)&length, sizeof(length));
 	set_max_length(files, length);
 	files && (id = ((t_file *)files->content)->id);
@@ -90,6 +105,8 @@ void			print_full_info(t_list *files)
 		}
 		files = files->next;
 	}
+	if ((g_flags & F_RECURSIVE))
+		continue_reading(head);
 }
 
 static t_list	*simple_print_loop(t_list *head, size_t size, int col, int id)
@@ -120,13 +137,8 @@ static t_list	*simple_print_loop(t_list *head, size_t size, int col, int id)
 		if (mod == col)
 			ft_putchar('\n');
 	}
-	while (head)
-	{
-		file = *((t_file*)head->content);
-		if (S_ISDIR(file.stats.st_mode) && (g_flags & F_RECURSIVE) && *(file.name) != '.')
-			ft_ls_r(&file);
-		head = head->next;
-	}
+	if ((g_flags & F_RECURSIVE))
+		continue_reading(head);
 	return (files);
 }
 
