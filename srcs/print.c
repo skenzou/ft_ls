@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:23:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/11 02:05:22 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/11 02:51:22 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,15 +66,25 @@ static void		print_full_info_name(t_file file, int length[6], t_list *files)
 
 static void		continue_reading(t_list *head)
 {
-	t_file file;
+	t_file	file;
+	int		save;
+	int		id;
 
+	save = g_multiarg;
+	g_multiarg = 0;
+	id = ((t_file *)(head)->content)->id;
 	while (head)
 	{
 		file = *((t_file*)head->content);
-		if (S_ISDIR(file.stats.st_mode) && *(file.name) != '.')
-			ft_ls_r(&file);
+		if (id != file.id)
+			break ;
+		if (*(file.name) != '.' || (g_flags & F_DOT))
+			if (S_ISDIR(file.stats.st_mode)
+					&& ft_strcmp(file.name, ".") && ft_strcmp(file.name, ".."))
+				ft_ls_r(&file);
 		head = head->next;
 	}
+	g_multiarg = save;
 }
 
 void			print_full_info(t_list *head)
@@ -156,7 +166,10 @@ void			simple_print_col(t_list *head)
 	print_head(((t_file *)head->content)->path, NULL);
 	if ((head = simple_print_loop(head, size, col, id)))
 	{
-		ft_putendl("\n");
+		if (g_flags & F_RECURSIVE)
+			ft_putchar('\n');
+		else
+			ft_putendl("\n");
 		simple_print_col(head);
 	}
 }
