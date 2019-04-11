@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:38:49 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/08 20:34:43 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/11 08:08:15 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,16 @@ int				check_next(t_list *list, int size, int id)
 
 int				print_head(char *path, t_list *files)
 {
+	int		totalsize;
+
+	totalsize = get_totalsize(files);
 	if (g_multiarg && path)
 	{
 		ft_putstr(path);
 		ft_putstr(":\n");
 	}
-	if (files)
-		ft_printf("total %lld\n", get_totalsize(files));
+	if (files && totalsize != -1)
+		ft_printf("total %lld\n", totalsize);
 	return (1);
 }
 

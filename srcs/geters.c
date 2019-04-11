@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:27:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/11 07:38:03 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/11 08:05:39 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,14 +68,18 @@ long long	get_totalsize(t_list *files)
 	long long		size;
 	t_file			file;
 	int				id;
+	int				found;
 
 	if (!files)
 		return (0);
 	size = 0;
 	id = ((t_file*)files->content)->id;
+	found = 0;
 	while (files)
 	{
 		file = *((t_file*)files->content);
+		if (*(file.name) != '.' || (g_flags & F_DOT))
+			found = 1;
 		size += file.stats.st_blocks;
 		files = files->next;
 		if (g_multiarg && files)
@@ -85,7 +89,7 @@ long long	get_totalsize(t_list *files)
 				break ;
 		}
 	}
-	return (size);
+	return (found ? size : -1);
 }
 
 char		get_extended(t_file *file)
