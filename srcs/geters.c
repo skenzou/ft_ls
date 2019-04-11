@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:27:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/10 21:58:40 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/11 06:26:07 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,21 +36,20 @@ int			get_max_name_length(t_list *files)
 	return (len);
 }
 
-int			get_col(t_list *files)
+int			get_col(t_list *files, int *nbfile)
 {
-	int		nbfile;
 	int		fileperline;
 	t_file	file;
 	int		id;
 
 	fileperline = get_term_colsize() / (get_max_name_length(files) + 1);
-	nbfile = 0;
+	*nbfile = 0;
 	id = ((t_file *)files->content)->id;
 	while (files)
 	{
 		file = *((t_file *)files->content);
 		if (*(file.name) != '.' || (g_flags & F_DOT))
-			nbfile++;
+			(*nbfile)++;
 		files = files->next;
 		if (g_multiarg && files)
 		{
@@ -59,7 +58,7 @@ int			get_col(t_list *files)
 				break ;
 		}
 	}
-	return ((nbfile / fileperline) + (nbfile % fileperline != 0 ? 1 : 0));
+	return ((*nbfile / fileperline) + (*nbfile % fileperline != 0 ? 1 : 0));
 }
 
 long long	get_totalsize(t_list *files)

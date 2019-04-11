@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:31:17 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/11 01:42:08 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/11 06:25:29 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ typedef struct				s_file
 	char					full_path[MAX_PATH_LEN];
 	char					printed;
 	int						id;
+	int						nbfiles;
 }							t_file;
 
 /*
@@ -94,7 +95,7 @@ t_file						create_file(char *name, char *path);
 ** GETERS.C
 */
 int							get_max_name_length(t_list *files);
-int							get_col(t_list *files);
+int							get_col(t_list *files, int *nbfile);
 long long					get_totalsize(t_list *files);
 char						get_extended(t_file *file);
 int							get_term_colsize(void);

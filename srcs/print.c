@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:23:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/11 02:51:22 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/11 06:28:08 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static void		print_full_info_name(t_file file, int length[6], t_list *files)
 	}
 }
 
-static void		continue_reading(t_list *head)
+static int		continue_reading(t_list *head)
 {
 	t_file	file;
 	int		save;
@@ -85,6 +85,7 @@ static void		continue_reading(t_list *head)
 		head = head->next;
 	}
 	g_multiarg = save;
+	return (1);
 }
 
 void			print_full_info(t_list *head)
@@ -119,57 +120,64 @@ void			print_full_info(t_list *head)
 		continue_reading(head);
 }
 
+static void		simple_print_name(t_file *file, size_t size, int i, int col)
+{
+	if (i > file->nbfiles - col && i <= file->nbfiles)
+		print_name(file, 0);
+	else
+		print_name(file, size);
+}
+
+static void		simple_print_endl(int mod, int col)
+{
+	if (mod < col)
+		ft_putchar('\n');
+	if (mod == col)
+		ft_putchar('\n');
+}
+
 static t_list	*simple_print_loop(t_list *head, size_t size, int col, int id)
 {
 	int			mod;
 	t_list		*files;
 	int			i;
 	t_file		file;
+	int			nbfiles;
 
 	mod = 0;
-	while (mod < col)
+	col = get_col(head, &nbfiles);
+	while (mod < col && !(i = 0))
 	{
-		i = 0;
 		files = head;
 		while (files)
 		{
 			file = *((t_file*)files->content);
 			if (*(file.name) != '.' || (g_flags & F_DOT))
-				if (i++ % col == mod)
-					print_name(&file, size);
+				if (i++ % col == mod && (file.nbfiles = nbfiles))
+					simple_print_name(&file, size, i, col);
 			files = files->next;
 			if (files && ((t_file *)files->content)->id != id)
 				break ;
 		}
-		mod++;
-		if (mod < col)
-			ft_putchar('\n');
-		if (mod == col)
-			ft_putchar('\n');
+		simple_print_endl(++mod, col);
 	}
-	if ((g_flags & F_RECURSIVE))
-		continue_reading(head);
+	(g_flags & F_RECURSIVE) && continue_reading(head);
 	return (files);
 }
 
 void			simple_print_col(t_list *head)
 {
 	size_t		size;
-	int			col;
 	int			id;
 
 	if (!head)
 		return ;
 	size = get_max_name_length(head) + 1;
-	col = get_col(head);
 	id = ((t_file *)head->content)->id;
 	print_head(((t_file *)head->content)->path, NULL);
-	if ((head = simple_print_loop(head, size, col, id)))
+	if ((head = simple_print_loop(head, size, 0, id)))
 	{
-		if (g_flags & F_RECURSIVE)
-			ft_putchar('\n');
-		else
-			ft_putendl("\n");
+		ft_putchar('\n');
 		simple_print_col(head);
 	}
 }
