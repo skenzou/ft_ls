@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:27:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/12 01:05:08 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/12 08:03:36 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ int			get_col(t_list *files, int *nbfile)
 			(*nbfile)++;
 		files = files->next;
 	}
+	if (fileperline <= 0)
+		fileperline = 1;
 	col = (*nbfile / fileperline) + (*nbfile % fileperline != 0 ? 1 : 0);
 	return (col > 0 ? col : 1);
 }
