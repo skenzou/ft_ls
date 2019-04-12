@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:31:17 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/13 00:57:39 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/13 01:05:58 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ typedef struct				s_file
 	char					*name;
 	char					*path;
 	char					full_path[MAX_PATH_LEN];
-	char					printed;
 	int						nbfiles;
 	time_t					time;
 	long					ntime;
