@@ -6,7 +6,7 @@
 /*   By: Mohamed <Mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/11 11:14:51 by Mohamed           #+#    #+#             */
-/*   Updated: 2019/04/13 00:45:16 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/13 01:11:04 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void		print_err(char *name)
 {
 	char *err;
 
-	err = ft_strjoin("ls: ", name);
+	err = ft_strjoin("ft_ls: ", name);
 	perror(err);
 	ft_strdel(&err);
 }
