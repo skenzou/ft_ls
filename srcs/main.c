@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/12 05:55:58 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/12 06:41:38 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,20 +41,40 @@ char g_flags;
 **}
 */
 
-static void		set_lsflags(int argc, char **argv)
+static void 		usage(char c)
+{
+	ft_putstr_fd("ft_ls: illegal option -- ", 2);
+	write(2, &c, 1);
+	ft_putchar('\n');
+	ft_putendl_fd("usage: ft_ls [-lRarftuG] [file ...]", 2);
+	exit(1);
+}
+
+static char 		**set_lsflags(int *argc, char **argv)
 {
 	int i;
 
+	argv++ && (*argc)--;
 	i = -1;
-	g_flags = 0;
-	while (++i < argc)
-		if (*argv[i] == '-' && argv[i]++)
-			while (*(argv[i]) && *(argv[i]) != ' ')
-			{
-				if (ft_indexof(LSFLAGS, *argv[i]) >= 0)
-					g_flags |= (1 << (ft_indexof(LSFLAGS, *argv[i])));
-				argv[i]++;
-			}
+	while (++i < *argc)
+	{
+		if (*argv[i] != '-')
+		{
+			(*argc) -= i;
+			return argv + i;
+		}
+		else
+			argv[i]++;
+		while (*(argv[i]))
+		{
+			if (!ft_strchr(LSFLAGS, *(argv[i])))
+					usage(*(argv[i]));
+			g_flags |= (1 << (ft_indexof(LSFLAGS, *argv[i])));
+			argv[i]++;
+		}
+	}
+	*argc -= i;
+	return (argv - 1);
 }
 
 void	ft_ls_r(t_file *file)
@@ -115,14 +135,11 @@ static	void	ft_ls(int argc, char **names)
 
 int				main(int argc, char **argv)
 {
-	set_lsflags(argc, argv);
-	(g_flags ) && (argv++);
-	argc -= (g_flags != 0);
-	if (argc == 1 && (argv[0] = "."))
-		ft_ls(argc, argv);
+	argv = set_lsflags(&argc, argv);
+	if (argc == 0 && (argv[0] = "."))
+		ft_ls(argc + 1, argv);
 	else
 	{
-		argv++ && argc--;
 		(argc > 1) && sort_args(argc, argv, (g_flags & F_REVERSE));
 		ft_ls(argc, argv);
 	}
