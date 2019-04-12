@@ -6,7 +6,7 @@
 #    By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/12 06:27:40 by aben-azz          #+#    #+#              #
-#    Updated: 2019/04/12 07:07:55 by midrissi         ###   ########.fr        #
+#    Updated: 2019/04/12 07:36:02 by midrissi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ CC				=	gcc
 AR				=	ar -rc
 MKDIR			=	mkdir -p
 RM				=	/bin/rm -rf
-W_FLAGS			=	-Wall -Wextra -Werror
+W_FLAGS			=	-Wall -Wextra -Werror -Ofast
 FLAGS			=	$(W_FLAGS)
 DELTA			=	$$(echo "$$(tput cols)-47"|bc)
 SRCS			=	$(addprefix $(SRC_DIR), $(SRC_BASE))

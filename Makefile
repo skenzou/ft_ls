@@ -6,7 +6,7 @@
 #    By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/03 09:24:41 by midrissi          #+#    #+#              #
-#    Updated: 2019/04/12 07:07:27 by midrissi         ###   ########.fr        #
+#    Updated: 2019/04/12 07:35:52 by midrissi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 _END			=	\x1b[0m
@@ -31,7 +31,7 @@ _ICYAN			=	\x1b[46m
 _IWHITE			=	\x1b[47m
 NAME		=	ft_ls
 CC			=	gcc
-FLAGS		=	-Wall -Wextra -Werror
+FLAGS		=	-Wall -Wextra -Werror -Ofast
 D_FLAGS		=	-g
 DELTA		=	$$(echo "$$(tput cols)-47"|bc)
 LIBFT_DIR	=	libft/
