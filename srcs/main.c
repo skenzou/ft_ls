@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/12 06:41:38 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/12 06:53:03 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,7 @@ static void 		usage(char c)
 {
 	ft_putstr_fd("ft_ls: illegal option -- ", 2);
 	write(2, &c, 1);
-	ft_putchar('\n');
-	ft_putendl_fd("usage: ft_ls [-lRarftuG] [file ...]", 2);
+	ft_putendl_fd("\nusage: ft_ls [-lRarftuG] [file ...]", 2);
 	exit(1);
 }
 

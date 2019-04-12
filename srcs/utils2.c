@@ -6,7 +6,7 @@
 /*   By: Mohamed <Mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/11 11:14:51 by Mohamed           #+#    #+#             */
-/*   Updated: 2019/04/12 05:59:16 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/12 06:53:23 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void 		ft_listdel(t_list *head)
 		ft_strdel(&(file->name));
 		ft_strdel(&(file->pwd));
 		ft_strdel(&(file->group));
+		free(head->content);
 		temp = head;
 		head = head->next;
 		free(temp);
