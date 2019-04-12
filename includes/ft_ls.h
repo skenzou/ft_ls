@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:31:17 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/13 01:05:58 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/13 01:08:31 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # include <sys/ioctl.h>
 # include <sys/xattr.h>
 # include <sys/acl.h>
-# define LSFLAGS			"lRarftuG"
+# define LSFLAGS			"lRartG"
 # define F_LIST				(1 << 0)
 # define F_RECURSIVE		(1 << 1)
 # define F_DOT				(1 << 2)
