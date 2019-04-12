@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/12 05:30:30 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/12 05:55:58 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ static	void	ft_ls(int argc, char **names)
 			handle_notdir(names[i], &biglist[0]);
 		else
 			list_dir(dir, &biglist[j++], names[i]);
-	ft_lstrev(&biglist[0]);
+	!(g_flags & F_LAST_ACCESS) ? ft_lstrev(&biglist[0]) : 0;
 	handle_fiflnks(biglist[0], biglist[1]);
 	(g_flags & F_LAST_ACCESS) && sort_args_t(j, biglist, (g_flags & F_REVERSE));
 	argc = j;
