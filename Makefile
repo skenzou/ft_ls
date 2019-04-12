@@ -6,7 +6,7 @@
 #    By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/03 09:24:41 by midrissi          #+#    #+#              #
-#    Updated: 2019/04/12 07:35:52 by midrissi         ###   ########.fr        #
+#    Updated: 2019/04/13 00:52:11 by midrissi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 _END			=	\x1b[0m
@@ -40,8 +40,9 @@ LIBFT_INC	=	$(LIBFT_DIR)includes/
 SRC_DIR		=	srcs/
 INC_DIR		=	includes/
 OBJ_DIR		=	obj/
-SRC_BASE 	= main.c print.c utils.c list.c handlers.c geters.c print_utils.c \
-			list2.c utils2.c
+SRC_BASE 	= main.c utils.c list.c handlers.c geters.c print_utils.c \
+			list2.c simple_print.c print_full_info.c flags.c \
+			create_file.c
 SRCS		=	$(addprefix $(SRC_DIR), $(SRC_BASE))
 OBJS		=	$(addprefix $(OBJ_DIR), $(SRC_BASE:.c=.o))
 NB			=	$(words $(SRC_BASE))

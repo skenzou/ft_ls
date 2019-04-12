@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:32:19 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/12 01:04:44 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/13 00:58:15 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,25 +83,21 @@ void		list_dir(DIR *dir, t_list **head, char *path)
 	time_t			time;
 	long			ntime;
 
-	list = NULL;
 	while ((d = readdir(dir)))
 	{
-		file = create_file(d->d_name, path);
 		if (*(file.name) == '.' && !*(file.name + 1))
 		{
 			time = file.stats.st_mtimespec.tv_sec;
 			ntime = file.stats.st_mtimespec.tv_nsec;
 		}
-		file.namesize = ft_strlen(d->d_name);
-		file.time = time;
-		file.ntime = ntime;
+		file = create_file(d->d_name, path, time, ntime);
 		list = ft_lstnew((void *)&file, sizeof(t_file));
 		list == NULL ? exit(1) : 0;
 		if (g_flags & F_REVERSE)
-			(g_flags & F_LAST_ACCESS) ? insert_time_r(head, list, 1)
+			(g_flags & F_LAST_MODIF) ? insert_time_r(head, list, 1)
 											: insert_asc_r(head, list, 1);
 		else
-			(g_flags & F_LAST_ACCESS) ? insert_time(head, list, 1)
+			(g_flags & F_LAST_MODIF) ? insert_time(head, list, 1)
 											: insert_asc(head, list, 1);
 	}
 	closedir(dir);

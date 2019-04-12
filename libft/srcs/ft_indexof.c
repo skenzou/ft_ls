@@ -6,19 +6,19 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/28 14:52:16 by midrissi          #+#    #+#             */
-/*   Updated: 2019/03/28 14:55:37 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/13 01:01:02 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int   ft_indexof(char *str, char c)
+int		ft_indexof(char *str, char c)
 {
-  int i;
+	int i;
 
-  i = -1;
-  while (str && str[++i])
-    if (str[i] == c)
-      return (i);
-  return (-1);
+	i = -1;
+	while (str && str[++i])
+		if (str[i] == c)
+			return (i);
+	return (-1);
 }

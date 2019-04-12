@@ -6,39 +6,39 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 01:44:57 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/12 05:26:31 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/13 00:32:10 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void        print_time(t_file *file)
+void			print_time(t_file *file)
 {
-    time_t        now;
-    long long    diff;
-    char        *date;
+	time_t		now;
+	long long	diff;
+	char		*date;
 
-    time(&now);
-    diff = now - file->stats.st_mtimespec.tv_sec;
-    date = ctime(&file->stats.st_mtimespec.tv_sec);
-    date == NULL ? exit(1) : 0;
-    if (diff > SIX_MONTHS || diff < 0)
-    {
-        ft_putchar(' ');
-        write(1, date + 4, 7);
-        ft_putchar(' ');
-        write(1, date + 20, 4);
-				ft_putchar(' ');
-    }
-    else
-    {
-        ft_putchar(' ');
-        write(1, date + 4, 12);
-        ft_putchar(' ');
-    }
+	time(&now);
+	diff = now - file->stats.st_mtimespec.tv_sec;
+	date = ctime(&file->stats.st_mtimespec.tv_sec);
+	date == NULL ? exit(1) : 0;
+	if (diff > SIX_MONTHS || diff < 0)
+	{
+		ft_putchar(' ');
+		write(1, date + 4, 7);
+		ft_putchar(' ');
+		write(1, date + 20, 4);
+		ft_putchar(' ');
+	}
+	else
+	{
+		ft_putchar(' ');
+		write(1, date + 4, 12);
+		ft_putchar(' ');
+	}
 }
 
-int			lsprint(char *string, int namesize, int padding, char *color)
+int				lsprint(char *string, int namesize, int padding, char *color)
 {
 	write(1, color, ft_strlen(color));
 	write(1, string, namesize);
@@ -47,7 +47,7 @@ int			lsprint(char *string, int namesize, int padding, char *color)
 	return (0);
 }
 
-int lsputnbr(int nbr, int padding, int afterspace)
+int				lsputnbr(int nbr, int padding, int afterspace)
 {
 	ft_putchar(' ');
 	ft_nputchar(' ', padding - ft_intlen_base(nbr, 10));

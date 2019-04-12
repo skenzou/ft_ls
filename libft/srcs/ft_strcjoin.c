@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/27 19:56:22 by midrissi          #+#    #+#             */
-/*   Updated: 2019/03/27 20:20:33 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/13 00:59:06 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char	*ft_strcjoin(char const *s1, char const *s2, char c)
 		fresh[i] = s1[i];
 		i++;
 	}
-  fresh[i] = c;
+	fresh[i] = c;
 	fresh[i + 1] = '\0';
 	ft_strcat(fresh, s2);
 	return (fresh);

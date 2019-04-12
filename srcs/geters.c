@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:27:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/12 08:03:36 by Mohamed          ###   ########.fr       */
+/*   Updated: 2019/04/13 00:20:11 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,8 @@ char		get_extended(t_file *file)
 		acl_free(acl);
 		acl = NULL;
 	}
+	if (acl)
+		acl_free(acl);
 	if (attr > 0)
 		return ('@');
 	else if (acl != 0)

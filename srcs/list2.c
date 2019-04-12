@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 02:49:05 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/12 00:17:19 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/13 00:53:25 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static int		compare_time(t_list *first, t_list *second)
 	return (ret);
 }
 
-int			insert_time_asc(t_list **head, t_list *needle, char reverse)
+int				insert_time_asc(t_list **head, t_list *needle, char reverse)
 {
 	t_list	*curr;
 	t_list	*prev;
@@ -53,7 +53,7 @@ int			insert_time_asc(t_list **head, t_list *needle, char reverse)
 	return (1);
 }
 
-int			insert_time_loop(t_list **head, t_list *needle, char reverse)
+int				insert_time_loop(t_list **head, t_list *needle, char reverse)
 {
 	t_list	*curr;
 	t_list	*prev;
@@ -80,18 +80,15 @@ int			insert_time_loop(t_list **head, t_list *needle, char reverse)
 	return (1);
 }
 
-static int	add_head(t_list **head, t_list *needle)
-{
-	ft_lstadd(head, needle);
-	return (1);
-}
-
-int			insert_time_r(t_list **head, t_list *needle, int ret)
+int				insert_time_r(t_list **head, t_list *needle, int ret)
 {
 	if (!head || !needle)
 		return (1);
 	if (!(*head))
-		return (add_head(head, needle));
+	{
+		ft_lstadd(head, needle);
+		return (1);
+	}
 	ret = compare_time(*head, needle);
 	if (ret == 0)
 	{
@@ -110,12 +107,15 @@ int			insert_time_r(t_list **head, t_list *needle, int ret)
 	return (insert_time_loop(head, needle, 1));
 }
 
-int			insert_time(t_list **head, t_list *needle, int ret)
+int				insert_time(t_list **head, t_list *needle, int ret)
 {
 	if (!head || !needle)
 		return (0);
 	if (!(*head))
-		return (add_head(head, needle));
+	{
+		ft_lstadd(head, needle);
+		return (1);
+	}
 	ret = compare_time(*head, needle);
 	if (ret == 0)
 	{
