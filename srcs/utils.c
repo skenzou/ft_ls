@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:38:49 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/12 05:08:52 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/12 18:50:17 by Mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ static void		cat_fullpath(t_file *file, char *name, char *path)
 	if (path)
 	{
 		ft_strcpy(file->full_path, path);
-		ft_strcat(file->full_path, "/");
+		if (*path != '/' || *(path + 1))
+			ft_strcat(file->full_path, "/");
 	}
 	ft_strcat(file->full_path, name);
 	file->name = ft_strdup(name);
