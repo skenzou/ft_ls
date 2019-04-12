@@ -6,20 +6,11 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:23:31 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/12 01:37:59 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/12 01:57:46 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
-
-int			lsprint(char *string, int namesize, int padding, char *color)
-{
-	write(1, color, ft_strlen(color));
-	write(1, string, namesize);
-	write(1, "\x1b[0m", 4);
-	ft_nputchar(' ', ft_max(0, padding - namesize));
-	return (0);
-}
 
 static void		print_name(t_file *file, int size)
 {
@@ -44,16 +35,6 @@ static void		print_name(t_file *file, int size)
 	}
 	else
 		lsprint(file->name, file->namesize, size, "");
-	print_newline(size);
-}
-int lsputnbr(int nbr, int padding, int afterspace)
-{
-	ft_putchar(' ');
-	ft_nputchar(' ', padding - ft_intlen_base(nbr, 10));
-	ft_putnbr(nbr);
-	if (afterspace)
-		ft_putchar(' ');
-	return (1);
 }
 
 static void		print_full_info_name(t_file *file, int length[6])

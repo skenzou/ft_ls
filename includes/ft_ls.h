@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:31:17 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/12 01:04:32 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/12 01:56:50 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,10 +82,11 @@ void						simple_print_col(t_list *head, int argc);
 /*
 ** PRINT_UTILS.C
 */
-void						print_newline(int size);
 void						print_time(t_file *file);
 int							print_link(t_file *file);
 int							print_head(char *path, int header, t_list *files);
+int							lsprint(char *string, int namesize, int padding, char *color);
+int							lsputnbr(int nbr, int padding, int afterspace);
 /*
 ** UTILS.C
 */
