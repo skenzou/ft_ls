@@ -6,14 +6,13 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/12 06:53:03 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/12 23:01:56 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
 char g_flags;
-
 
 /*
 **void			print_flags(void)
@@ -40,7 +39,6 @@ char g_flags;
 **	printf("====================================================\n");
 **}
 */
-
 static void 		usage(char c)
 {
 	ft_putstr_fd("ft_ls: illegal option -- ", 2);
@@ -60,14 +58,14 @@ static char 		**set_lsflags(int *argc, char **argv)
 		if (*argv[i] != '-')
 		{
 			(*argc) -= i;
-			return argv + i;
+			return (argv + i);
 		}
 		else
 			argv[i]++;
 		while (*(argv[i]))
 		{
 			if (!ft_strchr(LSFLAGS, *(argv[i])))
-					usage(*(argv[i]));
+				usage(*(argv[i]));
 			g_flags |= (1 << (ft_indexof(LSFLAGS, *argv[i])));
 			argv[i]++;
 		}
@@ -99,6 +97,29 @@ void	ft_ls_r(t_file *file)
 	ft_listdel(head);
 }
 
+static int 	check_dirlnk(char *name, t_list **fiflnks)
+{
+	t_file	file;
+	t_list	*list;
+
+	if (!(g_flags & F_LIST))
+		return (1);
+	file = create_file(name, NULL);
+	if (S_ISLNK(file.stats.st_mode))
+	{
+		file.namesize = ft_strlen(name);
+		list = ft_lstnew((void *)&file, sizeof(t_file));
+		list == NULL ? exit(1) : 0;
+		if (g_flags & F_LAST_ACCESS)
+			(g_flags & F_REVERSE) ? insert_time_r(fiflnks, list, 1)
+												: insert_time(fiflnks, list, 1);
+		else
+			ft_lstadd(fiflnks, list);
+		return (0);
+	}
+	return (1);
+}
+
 static	void	ft_ls(int argc, char **names)
 {
 	DIR			*dir;
@@ -112,7 +133,7 @@ static	void	ft_ls(int argc, char **names)
 	while (++i < argc)
 		if (!(dir = opendir(names[i])))
 			handle_notdir(names[i], &biglist[0]);
-		else
+		else if (check_dirlnk(names[i], &biglist[0]))
 			list_dir(dir, &biglist[j++], names[i]);
 	!(g_flags & F_LAST_ACCESS) ? ft_lstrev(&biglist[0]) : 0;
 	handle_fiflnks(biglist[0], biglist[1]);
