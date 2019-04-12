@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/12 00:45:23 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/12 05:30:30 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ void	ft_ls_r(t_file *file)
 		list_dir(dir, &head, file->full_path);
 	else
 	{
+		ft_putstr(file->full_path);
+		ft_putstr(":\n");
 		print_err(file->name);
 		return ;
 	}
