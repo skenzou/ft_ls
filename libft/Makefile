@@ -6,7 +6,7 @@
 #    By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/12 06:27:40 by aben-azz          #+#    #+#              #
-#    Updated: 2019/04/12 06:47:03 by aben-azz         ###   ########.fr        #
+#    Updated: 2019/04/12 07:07:55 by midrissi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,7 +42,7 @@ SRCS			=	$(addprefix $(SRC_DIR), $(SRC_BASE))
 OBJS			=	$(addprefix $(OBJ_DIR), $(SRC_BASE:.c=.o))
 NB				=	$(words $(SRC_BASE))
 INDEX			=	0
-SRC_DIR			=	src/
+SRC_DIR			=	srcs/
 INC_DIR			=	includes/
 OBJ_DIR			=	objs/
 
