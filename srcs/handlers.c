@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:34:48 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/12 01:04:56 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/12 04:56:39 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,8 @@ void		set_max_length(t_list *l, int len[6])
 			continue ;
 		len[0] = ft_max(len[0], ft_intlen_base(f->stats.st_nlink, 10));
 		len[1] = ft_max(len[1], ft_intlen_base(f->stats.st_size, 10));
-		len[2] = ft_max(len[2], ft_strlen(getpwuid(f->stats.st_uid)->pw_name));
-		len[3] = ft_max(len[3], ft_strlen(getgrgid(f->stats.st_gid)->gr_name));
+		len[2] = ft_max(len[2], ft_strlen(f->pwd));
+		len[3] = ft_max(len[3], ft_strlen(f->group));
 		if (S_ISCHR(f->stats.st_mode) || S_ISBLK(f->stats.st_mode))
 		{
 			boolean = 1;

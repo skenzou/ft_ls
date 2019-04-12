@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:38:49 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/12 00:51:25 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/04/12 05:08:52 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,27 @@ static void		cat_fullpath(t_file *file, char *name, char *path)
 	file->path = path;
 }
 
+static void 		fill_uids(t_file *file)
+{
+	t_passwd			*pwd;
+	t_group				*group;
+
+	if ((pwd = getpwuid(file->stats.st_uid)))
+		file->pwd = ft_strdup(pwd->pw_name);
+	else
+	{
+		if (!(file->pwd = ft_utoa_base(file->stats.st_uid, 10, 0)))
+			exit(1);
+	}
+	if ((group = getgrgid(file->stats.st_gid)))
+		file->group = ft_strdup(group->gr_name);
+	else
+	{
+		if (!(file->group = ft_utoa_base(file->stats.st_gid, 10, 0)))
+			exit(1);
+	}
+}
+
 t_file			create_file(char *name, char *path)
 {
 	t_file		file;
@@ -74,6 +95,7 @@ t_file			create_file(char *name, char *path)
 	ft_bzero((void *)&file, sizeof(t_file));
 	cat_fullpath(&file, name, path);
 	lstat(file.full_path, &(file.stats));
+	fill_uids(&file);
 	file.perms[0] = 0;
 	(S_ISREG(file.stats.st_mode)) && (file.perms[0] = '-');
 	(S_ISDIR(file.stats.st_mode)) && (file.perms[0] = 'd');
