@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:32:19 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/13 00:58:15 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/13 01:30:01 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,22 +75,23 @@ int			insert_asc(t_list **head, t_list *needle, int ret)
 	return (insert_asc_loop(head, needle, 0));
 }
 
-void		list_dir(DIR *dir, t_list **head, char *path)
+void		list_dir(DIR *dir, t_list **head, char *path, long ntime)
 {
 	t_dirent		*d;
 	t_list			*list;
 	t_file			file;
 	time_t			time;
-	long			ntime;
 
 	while ((d = readdir(dir)))
 	{
+		file = create_file(d->d_name, path);
 		if (*(file.name) == '.' && !*(file.name + 1))
 		{
 			time = file.stats.st_mtimespec.tv_sec;
 			ntime = file.stats.st_mtimespec.tv_nsec;
 		}
-		file = create_file(d->d_name, path, time, ntime);
+		file.time = time;
+		file.ntime = ntime;
 		list = ft_lstnew((void *)&file, sizeof(t_file));
 		list == NULL ? exit(1) : 0;
 		if (g_flags & F_REVERSE)

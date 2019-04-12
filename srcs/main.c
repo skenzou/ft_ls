@@ -6,7 +6,7 @@
 /*   By: midrissi <midrissi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:30:46 by midrissi          #+#    #+#             */
-/*   Updated: 2019/04/13 01:03:37 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/13 01:31:22 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void			ft_ls_r(t_file *file)
 	ft_putchar('\n');
 	head = NULL;
 	if ((dir = opendir(file->full_path)))
-		list_dir(dir, &head, file->full_path);
+		list_dir(dir, &head, file->full_path, 0);
 	else
 	{
 		ft_putstr(file->full_path);
@@ -44,7 +44,7 @@ static int		check_dirlnk(char *name, t_list **fiflnks)
 
 	if (!(g_flags & F_LIST))
 		return (1);
-	file = create_file(name, NULL, 0, 0);
+	file = create_file(name, NULL);
 	if (S_ISLNK(file.stats.st_mode))
 	{
 		file.namesize = ft_strlen(name);
@@ -92,7 +92,7 @@ static	void	ft_ls(int argc, char **names)
 		if (!(dir = opendir(names[i])))
 			handle_notdir(names[i], &biglist[0]);
 		else if (check_dirlnk(names[i], &biglist[0]))
-			list_dir(dir, &biglist[j++], names[i]);
+			list_dir(dir, &biglist[j++], names[i], 0);
 	!(g_flags & F_LAST_MODIF) ? ft_lstrev(&biglist[0]) : 0;
 	handle_fiflnks(biglist[0], biglist[1]);
 	if (g_flags & F_LAST_MODIF)

@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 12:38:49 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/04/13 00:57:07 by midrissi         ###   ########.fr       */
+/*   Updated: 2019/04/13 01:28:57 by midrissi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static void		fill_uids(t_file *file)
 	}
 }
 
-t_file			create_file(char *name, char *path, time_t time, long ntime)
+t_file			create_file(char *name, char *path)
 {
 	t_file		file;
 
@@ -74,8 +74,6 @@ t_file			create_file(char *name, char *path, time_t time, long ntime)
 	fill_uids(&file);
 	file.namesize = ft_strlen(name);
 	file.perms[0] = 0;
-	file.time = time;
-	file.ntime = ntime;
 	(S_ISREG(file.stats.st_mode)) && (file.perms[0] = '-');
 	(S_ISDIR(file.stats.st_mode)) && (file.perms[0] = 'd');
 	(S_ISBLK(file.stats.st_mode)) && (file.perms[0] = 'b');
