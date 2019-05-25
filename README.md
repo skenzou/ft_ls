@@ -7,7 +7,7 @@ Recoding the shell ls command
 ## Features
 - Supported flags: -l, -R, -a, -r, -t and -G
 - Management of ACL and extended attributes
-- Management of the columns without the option -l
+- Management of the columns without the option -l (output sorted by columns)
 
 ## HOW TO USE
 
